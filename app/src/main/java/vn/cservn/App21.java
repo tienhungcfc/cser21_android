@@ -72,14 +72,11 @@ public class App21 {
             json.put("sub_cmd", result.sub_cmd);*/
 
             Gson gson = new Gson();
-            String params = result.params;//có thể params= jsonString => lỗi
-            result.params = "";
 
             String s = gson.toJson(result);
+            s = "BASE64:"+DownloadFilesTask.strBase64(s); //Convert to 64 de trach ky tu dc biet
 
-            s = s.replace("'", "\\'");
-            if (params != null) params = params.replace("'", "\\'");
-            String script = "App21Result('" + s + "', '" + params + "')";
+            String script = "App21Result('" + s + "')";
             // wv.evaluateJavascript(script, null);
 
             MainActivity m = (MainActivity) mContext;
@@ -388,6 +385,7 @@ public class App21 {
                     rs.success = true;
                     App21Result(rs);
                     ;
+
                     loction21.run(rs.params);
 
                 } else {

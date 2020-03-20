@@ -188,6 +188,14 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
         return arr;
     }
 
+    public static String strBase64(String input){
+        try{
+            byte[] data = input.getBytes();
+            return  Base64.getUrlEncoder().encodeToString(data);
+        }catch (Exception ex){
+            return "";
+        }
+    }
 
     public String toBase64(String localPath){
 

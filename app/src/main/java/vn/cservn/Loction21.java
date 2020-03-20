@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.Task;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Method;
+
 public class Loction21 {
     public Context mContext;
 
@@ -55,13 +57,28 @@ public class Loction21 {
     private void updateClient(Location location) {
         JSONObject json = new JSONObject();
         try {
+
+
+            for (Method m : location.getClass().getMethods()
+                 ) {
+                try{
+                    String n = m.getName();
+                    if(n.startsWith("get")) json.put(m.getName(), m.invoke(location));
+                }
+                catch (Exception ex){
+                    //
+                }
+            }
+
+
             json.put("lat", location.getLatitude());
             json.put("lng", location.getLongitude());
+
         } catch (Exception e) {
             //
         }
         String s = json.toString();
-        String script = jsCallbackName + "('" + s + "')";
+        String script = jsCallbackName + "('BASE64:" + DownloadFilesTask.strBase64(s) + "')";
         // wv.evaluateJavascript(script, null);
         MainActivity m = (MainActivity) mContext;
         m.evalJs(script);
