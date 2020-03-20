@@ -1,0 +1,711 @@
+package vn.cservn;
+
+import android.support.annotation.NonNull;
+import android.annotation.SuppressLint;
+import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.content.Context;
+import android.provider.MediaStore;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
+import android.view.Window;
+import android.webkit.JavascriptInterface;
+import android.view.View;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebViewClient;
+
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
+
+import android.util.Log;
+import android.view.KeyEvent;
+import android.webkit.WebView;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+/*
+Thay đổi cấu hình cho từng app
+bao gồm:
+- màu thương hiệu /res/color.xml
+- Tên domain thương hiệu /res/string.xml
+- Firebase notifiction /assets/google-service.json
+*/
+public class MainActivity extends AppCompatActivity {
+
+    ANDROID ANDROID;
+    WebView wv;
+    App21 app21 = new App21(this);
+
+    private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
+    private float mPreviousX;
+    private float mPreviousY;
+    private float dx;
+    private float dy;
+
+    //Upload Var
+    private float m_downX;
+    private static final int STORAGE_PERMISSION_CODE = 123;
+    private final static int FILECHOOSER_RESULTCODE = 1;
+    private ValueCallback<Uri[]> mUploadMessage;
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private String mCM;
+    private ValueCallback<Uri> mUM;
+    private ValueCallback<Uri[]> mUMA;
+    private final static int FCR = 1;
+
+    // End Upload Var
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        //Kiểm tra sử lý bởi app21
+        if (app21.onActivityResult(requestCode, resultCode, intent, this)) return;
+
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            Uri[] results = null;
+            //Check if response is positive
+            if (resultCode == Activity.RESULT_OK) {
+                if (requestCode == FCR) {
+                    if (null == mUMA) {
+                        return;
+                    }
+                    if (intent == null) {
+                        //Capture Photo if no image available
+                        if (mCM != null) {
+                            results = new Uri[]{Uri.parse(mCM)};
+                        }
+                    } else {
+                        String dataString = intent.getDataString();
+                        if (dataString != null) {
+                            results = new Uri[]{Uri.parse(dataString)};
+                        }
+                    }
+                }
+            }
+            mUMA.onReceiveValue(results);
+            mUMA = null;
+        } else {
+            if (requestCode == FCR) {
+                if (null == mUM) return;
+                Uri result = intent == null || resultCode != RESULT_OK ? null : intent.getData();
+                mUM.onReceiveValue(result);
+                mUM = null;
+            }
+        }
+    }
+
+    public String getKey(String keyName, String df) {
+        String name= this.getPackageName();
+        SharedPreferences sharedPref = getSharedPreferences("app", Context.MODE_PRIVATE);
+        return sharedPref.getString(keyName, df);
+    }
+
+    public  SharedPreferences getShared(String shareName){
+        return   getSharedPreferences(shareName, Context.MODE_PRIVATE);
+    }
+
+    public void setKey(String keyName, String value) {
+
+        SharedPreferences sharedPref = getSharedPreferences("app", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(keyName, value);
+        editor.commit();
+    }
+
+
+    void JavaScript(String fnName) {
+        wv.loadUrl("javascript:" + fnName + "();");
+    }
+
+    void DoJS(String cmd, String _value) {
+        String script = "app_response('" + cmd + "','" + _value + "')";
+        wv.evaluateJavascript(script, null);
+    }
+
+
+    public void evalJs(final String script) {
+        wv.post(new Runnable() {
+            @Override
+            public void run() {
+                wv.evaluateJavascript(script, null);
+            }
+        });
+    }
+
+
+    @SuppressLint({"ClickableViewAccessibility", "WrongViewCast"})
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        /*
+        Test
+        * */
+
+
+        //go
+        super.onCreate(savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= 23 && (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+            // Ẩn để gọi động
+            //  ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+        }
+
+        setContentView(R.layout.activity_main);
+        wv = (WebView) this.findViewById(R.id.wv);
+        ANDROID = new ANDROID(this);
+        wv.addJavascriptInterface(ANDROID, "ANDROID");
+        wv.setBackgroundColor(Color.TRANSPARENT);
+
+
+        WebSettings setting = wv.getSettings();
+        //enble all
+
+        setting.setAllowContentAccess(true);
+        setting.setAllowFileAccess(true);
+
+        setting.setAllowUniversalAccessFromFileURLs(true);
+        //setting.setBlockNetworkImage(true);
+        //setting.setBlockNetworkLoads(true);
+
+        setting.setDatabaseEnabled(true);
+        setting.setDisplayZoomControls(true);
+
+
+        setting.setDomStorageEnabled(true);
+        setting.setJavaScriptCanOpenWindowsAutomatically(true);
+        setting.setJavaScriptEnabled(true);
+        setting.setLightTouchEnabled(true);
+        setting.setLoadWithOverviewMode(true);
+        setting.setLoadsImagesAutomatically(true);
+        setting.setMediaPlaybackRequiresUserGesture(true);
+        //setting.setSafeBrowsingEnabled(true);
+        setting.setSaveFormData(true);
+        setting.setSavePassword(true);
+
+        setting.setAllowFileAccessFromFileURLs(true);
+        setting.setAppCacheEnabled(true);
+        //setting.setBlockNetworkLoads(true);
+        //setting.setBlockNetworkLoads(true);
+        // setting.setBlockNetworkImage(true);
+        setting.setDisplayZoomControls(false);
+        setting.setUseWideViewPort(true);
+        setting.setBuiltInZoomControls(false);
+        // setting.setBlockNetworkImage(true);
+
+        setting.setCacheMode(WebSettings.LOAD_DEFAULT);
+        setting.setSupportMultipleWindows(false);
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            //WebSettings.setMixedContentMode(0);
+            wv.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else if (Build.VERSION.SDK_INT >= 19) {
+            wv.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else if (Build.VERSION.SDK_INT < 19) {
+            wv.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
+
+        //Mỗi một app có 1 domain riêng
+        String domain = getString(R.string.app_domain);
+        @SuppressLint("ResourceType") String color = getString(R.color.colorPrimary);
+        String html = "";
+
+        html = getAssetString("embed.html");
+        //
+
+        //upload
+        initWebView();
+
+        //21
+        Bundle extras = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
+        Gson gson = new Gson();
+
+        String jsonExtras = extras == null ? "{}" : gson.toJson(mapBundle(extras));
+        html = "<script> var ANDROID_EXTRAS =" + jsonExtras + " </script>" + html;
+
+        Log.d("jsonExtras", jsonExtras);
+        wv.loadDataWithBaseURL(domain, html + "", "text/html", "utf-8", "");
+
+
+    }
+
+    String getAssetString(String name) {
+        String str = "";
+        try {
+            InputStream input = getAssets().open(name);
+            // myData.txt can't be more than 2 gigs.
+            int size = input.available();
+            byte[] buffer = new byte[size];
+            input.read(buffer);
+            input.close();
+            str = new String(buffer);
+        } catch (IOException e) {
+
+        }
+        return str;
+    }
+
+    Map<String, Object> mapBundle(Bundle bundle) {
+
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            if (bundle == null) return map;
+            for (String key : bundle.keySet()) {
+                map.put(key, bundle.get(key));
+            }
+        } catch (Exception e) {
+            //
+        }
+        return map;
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+
+
+        Rect rectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+        int statusBarHeight = rectangle.top;
+        int w = wv.getWidth();
+        int h = wv.getHeight();
+        // do your stuff here... the below call will make sure the touch also goes to the webview.
+        float x = event.getX();
+        float y = event.getY();
+
+        float pcw = x / w;
+        float pch = (y - statusBarHeight) / h;
+
+        int action = event.getAction();
+
+        switch (action) {
+            case MotionEvent.ACTION_MOVE:
+                dx = x - mPreviousX;
+                dy = y - mPreviousY;
+
+        }
+
+        //wv.loadUrl("javascript:ANDROID_TOUCH({dx:"+dx+",dy:"+dy+",x:"+x+",y:"+y+",mPreviousX:"+mPreviousX+",mPreviousY:"+mPreviousY+" ,action:"+action+" });");
+        DoJS("TOUCH", "{\"dx\":" + dx + ",\"dy\":" + dy + ",\"x\":" + x + ",\"y\":" + y + ",\"mPreviousX\":" + mPreviousX + ",\"mPreviousY\":" + mPreviousY + ",\"action\":" + action + ",\"pcw\": " + pcw + ",\"pch\":" + pch + "}");
+        // SharedPreferences sharedPref = getSharedPreferences("app", Context.MODE_PRIVATE);
+
+
+        mPreviousX = x;
+        mPreviousY = y;
+
+
+        ANDROID.BackReset();
+        return super.dispatchTouchEvent(event);
+    }
+
+
+    //Requesting permission upload
+    private void requestStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            openFileExplorer();
+            return;
+        }
+
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            //If the user has denied the permission previously your code will come to this block
+            //Here you can explain why you need this permission
+            //Explain here why you need this permission
+        }
+        //And finally ask for the permission
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+        //for 21
+        if (requestCode >= pcm.minId)
+            pcm.RequestPermissionsResult(requestCode, permissions, grantResults);
+        //code ccu
+        //Checking the request code of our request
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+
+            //If permission is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openFileExplorer();
+                //Displaying a toast
+//                Toast.makeText(this, "Permission granted now you can read the storage", Toast.LENGTH_LONG).show();
+            } else {
+                //Displaying another toast if permission is not granted
+//                Toast.makeText(this, "Oops you just denied the permission", Toast.LENGTH_LONG).show();
+            }
+        }
+
+    }
+
+    public void openFileExplorer() {
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+        MainActivity.this.startActivityForResult(Intent.createChooser(i, "File Chooser"), MainActivity.FILECHOOSER_RESULTCODE);
+    }
+
+
+    public void requestCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        }
+    }
+
+    private void initWebView() {
+        wv.setWebViewClient(new Callback());
+        //wv.loadUrl("https://cser.vn/");
+        wv.setWebChromeClient(new WebChromeClient() {
+            //For Android 3.0+
+            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+                mUM = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("*/*");
+                MainActivity.this.startActivityForResult(Intent.createChooser(i, "File Chooser"), FCR);
+            }
+
+            // For Android 3.0+, above method not supported in some android 3+ versions, in such case we use this
+            public void openFileChooser(ValueCallback uploadMsg, String acceptType) {
+                mUM = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("*/*");
+                MainActivity.this.startActivityForResult(
+                        Intent.createChooser(i, "File Browser"),
+                        FCR);
+            }
+
+            //For Android 4.1+
+            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+                mUM = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("*/*");
+                MainActivity.this.startActivityForResult(Intent.createChooser(i, "File Chooser"), MainActivity.FCR);
+            }
+
+            //For Android 5.0+
+            public boolean onShowFileChooser(
+                    WebView webView, ValueCallback<Uri[]> filePathCallback,
+                    WebChromeClient.FileChooserParams fileChooserParams) {
+                if (mUMA != null) {
+                    mUMA.onReceiveValue(null);
+                }
+                mUMA = filePathCallback;
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(MainActivity.this.getPackageManager()) != null) {
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                        takePictureIntent.putExtra("PhotoPath", mCM);
+                    } catch (IOException ex) {
+                        Log.e(TAG, "Image file creation failed", ex);
+                    }
+                    if (photoFile != null) {
+                        mCM = "file:" + photoFile.getAbsolutePath();
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                    } else {
+                        takePictureIntent = null;
+                    }
+                }
+                Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                contentSelectionIntent.setType("*/*");
+                Intent[] intentArray;
+                if (takePictureIntent != null) {
+                    intentArray = new Intent[]{takePictureIntent};
+                } else {
+                    intentArray = new Intent[0];
+                }
+
+                Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+                chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+                chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+                startActivityForResult(chooserIntent, FCR);
+                return true;
+            }
+        });
+    }
+
+    public class Callback extends WebViewClient {
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            Toast.makeText(getApplicationContext(), "Failed loading app!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Create an image file
+    private File createImageFile() throws IOException {
+        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "img_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        return File.createTempFile(imageFileName, ".jpg", storageDir);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_BACK:
+                    if (wv.canGoBack()) {
+                        wv.goBack();
+                    } else {
+                        finish();
+                    }
+                    return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+    //End Requesting permission upload
+
+    @Override
+    public void onBackPressed() {
+
+
+        if (!ANDROID.IsPrepend) {
+            ANDROID.IsPrepend = true;
+            JavaScript("ANDROID_ONBACK");
+            return;
+        }
+
+        ANDROID.BackReset();
+        super.onBackPressed();
+
+    }
+
+    void Subscribe(String topics) {
+        if (topics == null || topics == "") return;
+        setKey("subscribe", topics);
+        String[] a1 = topics.split(",");
+        for (int i = 0; i < a1.length; i++) {
+            FirebaseMessaging.getInstance().subscribeToTopic(a1[i]);
+        }
+    }
+
+    void UnSubscribe() {
+        String topics = getKey("subscribe", "");
+        if (topics == null || topics == "") return;
+        String[] a1 = topics.split(",");
+        for (int i = 0; i < a1.length; i++) {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(a1[i]);
+        }
+    }
+
+    public void checkPermission(String PermissionName, Callback21 callback21) {
+
+        if (ContextCompat.checkSelfPermission(this, PermissionName)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            callback21.no();
+
+
+        } else {
+            callback21.ok();
+        }
+    }
+
+
+    PermissionCallbackManager pcm = new PermissionCallbackManager();
+
+    //https://developer.android.com/training/permissions/requesting
+    public void requirePermission(String Permission, Callback21 callback21) {
+
+        int requestCode = pcm.put(Permission, callback21);
+
+        if (requestCode == pcm.exist) {
+            //Đang chờ phản hồi
+            return;
+        }
+
+        ActivityCompat.requestPermissions(this,
+                Permission.split(","),//new String[]{Permission}
+                requestCode);
+
+
+    }
+
+
+    class PermissionCallbackManager {
+        List<PermissionCallback> lst;
+        final int minId = 10000;
+        final int exist = -999;
+        private int _id = 0;
+
+        public int put(String Permission, Callback21 callback21) {
+            if (lst == null) lst = new ArrayList<PermissionCallback>();
+
+            for (PermissionCallback p : lst) {
+                if (p.Permission == Permission) {
+                    p.callback21 = callback21;
+                    return exist;
+                }
+
+            }
+
+            PermissionCallback p = new PermissionCallback();
+            p.Permission = Permission;
+            p.callback21 = callback21;
+
+            if (_id == 0) _id = minId;
+            p.id = _id++;
+            lst.add(p);
+            return p.id;
+        }
+
+        public void RequestPermissionsResult(int requestCode,
+                                             String[] permissions, int[] grantResults) {
+
+            if (lst == null) lst = new ArrayList();
+            PermissionCallback p = null;
+            for (PermissionCallback _p : lst) {
+                if (_p.id == requestCode) {
+                    p = _p;
+                    break;
+                }
+            }
+            if (p == null) return;
+            ;
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // permission was granted, yay! Do the
+                // contacts-related task you need to do.
+                p.callback21.ok();
+            } else {
+                // permission denied, boo! Disable the
+                // functionality that depends on this permission.
+                p.callback21.no();
+            }
+            lst.remove(p);
+        }
+
+        class PermissionCallback {
+            public String Permission;
+            /* Runnable grantted;
+             Runnable denied;*/
+            public Callback21 callback21;
+            int id;
+        }
+    }
+
+    public class ANDROID {
+        Context mContext;
+
+
+        boolean IsNoBack = false;
+        boolean IsPrepend = false;
+
+        /**
+         * Instantiate the interface and set the context
+         */
+        ANDROID(Context c) {
+            mContext = c;
+
+        }
+
+
+        @JavascriptInterface
+        /*
+        ở client cần 1 setInterval để luôn xác định giá trị IsNoBack
+        * */
+        public void NoBack(boolean _IsNoBack) {
+            IsNoBack = _IsNoBack;
+            if (_IsNoBack) IsPrepend = false;
+        }
+
+        public void BackReset() {
+            IsPrepend = false;
+            IsNoBack = false;
+        }
+
+
+        @JavascriptInterface
+        public void OnNoBack() {
+
+        }
+
+        @JavascriptInterface
+        public void Do(String cmd, String value) {
+            if (cmd.equalsIgnoreCase("Test")) {
+                //DoJS(cmd,"AND-Test");
+            }
+
+            String v = "";
+            if (!value.equals(null)) v = value;
+            String[] segs = (v).split(":");
+
+            String key = "";
+            String va = "";
+            if (segs.length > 0) key = segs[0];
+            if (segs.length > 1) va = segs[1];
+            switch (cmd) {
+                case "setkey":
+                    setKey(key, va);
+                    break;
+                case "getkey":
+                    DoJS(cmd, getKey(key, ""));
+                    break;
+                case "subscribe":
+                    Subscribe(value);
+                    break;
+                case "unsubscribe":
+                    UnSubscribe();
+                    break;
+                case "call":
+                    app21.call(value);
+                    break;
+
+            }
+        }
+
+
+        @JavascriptInterface
+        public String toString() {
+            return "This is ANDROID";
+        }
+
+
+    }
+}

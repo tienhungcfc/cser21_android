@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1087460686681",
+    "firebase_url": "https://cser-d0ce7.firebaseio.com",
+    "project_id": "cser-d0ce7",
+    "storage_bucket": "cser-d0ce7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1087460686681:android:6905bad6399554f9",
+        "android_client_info": {
+          "package_name": "vn.cservn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1087460686681-l1aa6d3icusl8kk9o0o1auu370kvq1gn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCskcK9313WDXyjIRyaSl5gwfVch6LJslE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1087460686681-l1aa6d3icusl8kk9o0o1auu370kvq1gn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1087460686681-u6ep1qkdspsqvm3183ur7fgs5nbvu090.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "Appweb.Cser"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
