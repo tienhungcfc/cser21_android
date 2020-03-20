@@ -8,7 +8,7 @@ public class APP extends Application {
     private static Context context;
 
     public void onCreate() {
-        super.onCreate();
+        super.onCreate();  
         APP.context = getApplicationContext();
     }
 
