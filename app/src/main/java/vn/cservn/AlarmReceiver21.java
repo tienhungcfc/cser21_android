@@ -68,7 +68,7 @@ public class AlarmReceiver21 extends BroadcastReceiver {
         }
     }
 
-    Config getConfig(){
+    Config getConfig(Context context){
         Config config = new Config();
         try {
             SharedPreferences sharedPreferences = context.getSharedPreferences(shareName, Context.MODE_PRIVATE);
@@ -82,7 +82,7 @@ public class AlarmReceiver21 extends BroadcastReceiver {
     }
 
     public void setAlarm(Context context) {
-         Config config = getConfig();
+         Config config = getConfig(context);
          if(config == null) return;;
         ;
 
@@ -133,17 +133,37 @@ public class AlarmReceiver21 extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Config config = getConfig();
+        final Config config = getConfig(context);
         if(config == null) return;;
         if (!config.enable) {
             return;
         }
         if(WebControl.IsNullEmpty(config.server) ) return;
 
+        final  Context c= context;
+        final  Intent i = intent;
+
+        new Runnable(){
+            @Override
+            public void run() {
+                String s= "";
+                Noti21 noti21 = new Noti21();
+                noti21.notification = new Notification21();
+                noti21.notification.title = "Alert-" + Now();
+
+                noti21.data = new HashMap<String, String>();
+
+                if (increId >= Integer.MAX_VALUE) increId = 0;
+                int noti_id= increId++;
+                noti21.data.put("noti_id", "" + noti_id);
+                noti21.notification.body = "server -> " + s;//new Date()
+                noti(noti21, c, i);
+            }
+        }.run();
        // demoNoti();
     }
 
-    void demoNoti(){
+    void demoNoti(Context context, Intent intent){
         Noti21 noti21 = new Noti21();
         noti21.notification = new Notification21();
         noti21.notification.title = "Alert-" + Now();
@@ -296,5 +316,8 @@ public class AlarmReceiver21 extends BroadcastReceiver {
         public int intervalMillis = 1000 * 60 * 15;
         public String server;
         public boolean syncLocaction;
+    }
+    class ServerData{
+
     }
 }

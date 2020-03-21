@@ -29,6 +29,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.webkit.ValueCallback;
 
+import com.google.android.gms.common.util.IOUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -44,8 +45,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -524,6 +531,36 @@ public class App21 {
             }
         });
     }
+
+    //de test
+    void  GET_SERVER_API(final Result result){
+        new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    InputStream in = null;
+                    URL url = new URL(result.params);
+                    HttpURLConnection conn = null;
+                    conn = (HttpURLConnection) url.openConnection();
+                    // 2. Open InputStream to connection
+                    conn.connect();
+                    in = conn.getInputStream();
+                    byte[] bytes = IOUtils.toByteArray(in);
+                    String str = new String(bytes, "UTF-8");
+
+                    result.success =true;
+                    result.data = str;
+                    App21Result(result);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }.run();
+    }
+
 
     public boolean onActivityResult(int requestCode, int resultCode, Intent intent, Activity activity) {
         // Activity act = activity.getCallingActivity().;
