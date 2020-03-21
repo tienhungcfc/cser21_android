@@ -545,7 +545,7 @@ public class App21 {
                     conn = (HttpURLConnection) url.openConnection();
                     // 2. Open InputStream to connection
                     conn.connect();
-                    in = conn.getInputStream();
+                    in = conn.getInputStream(); 
                     byte[] bytes = IOUtils.toByteArray(in);
                     String str = new String(bytes, "UTF-8");
 
