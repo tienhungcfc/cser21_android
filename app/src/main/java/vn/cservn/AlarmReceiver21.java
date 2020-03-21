@@ -68,8 +68,7 @@ public class AlarmReceiver21 extends BroadcastReceiver {
         }
     }
 
-    public void setAlarm(Context context) {
-
+    Config getConfig(){
         Config config = new Config();
         try {
             SharedPreferences sharedPreferences = context.getSharedPreferences(shareName, Context.MODE_PRIVATE);
@@ -79,7 +78,12 @@ public class AlarmReceiver21 extends BroadcastReceiver {
 
         }
 
-        if (config == null) return;
+         return config;
+    }
+
+    public void setAlarm(Context context) {
+         Config config = getConfig();
+         if(config == null) return;;
         ;
 
         if (!config.enable) {
@@ -129,6 +133,17 @@ public class AlarmReceiver21 extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        Config config = getConfig();
+        if(config == null) return;;
+        if (!config.enable) {
+            return;
+        }
+        if(WebControl.IsNullEmpty(config.server) ) return;
+
+       // demoNoti();
+    }
+
+    void demoNoti(){
         Noti21 noti21 = new Noti21();
         noti21.notification = new Notification21();
         noti21.notification.title = "Alert-" + Now();
@@ -189,6 +204,7 @@ public class AlarmReceiver21 extends BroadcastReceiver {
         //2
         String largeIconUrl = data.containsKey("largeIcon") ? data.get("largeIcon") : null;
         if (largeIconUrl != null && !"".equals(largeIconUrl) && !"ic_launcher".equals(largeIconUrl)) {
+            largeIconUrl = DownloadFilesTask.tryDecodeUrl(largeIconUrl);
             Bitmap b = MyFirebaseMessagingService.getImageUrl(largeIconUrl);
             if (b != null) notificationBuilder.setLargeIcon(b);
         }
@@ -244,6 +260,7 @@ public class AlarmReceiver21 extends BroadcastReceiver {
         try {
             String picture_url = data.get("picture_url");
             if (picture_url != null && !"".equals(picture_url)) {
+                picture_url = DownloadFilesTask.tryDecodeUrl(picture_url);
                 URL url = new URL(picture_url);
                 Bitmap bigPicture = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                 notificationBuilder.setStyle(

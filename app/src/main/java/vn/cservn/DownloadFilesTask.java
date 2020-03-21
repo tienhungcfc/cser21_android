@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -190,7 +191,7 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
 
     public static String strBase64(String input){
         try{
-            byte[] data = input.getBytes();
+            byte[] data = input.getBytes("UTF-8");
             return  Base64.getUrlEncoder().encodeToString(data);
         }catch (Exception ex){
             return "";
@@ -212,6 +213,16 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
             return  imageStr;
         }catch (Exception ex){
             return  null;
+        }
+    }
+
+    public static  String tryDecodeUrl(String input){
+        String encode =  "encode:";
+        if(input.startsWith(encode))
+        {
+            return  URLDecoder.decode(input.substring(encode.length()));
+        }else{
+            return  input;
         }
     }
 
