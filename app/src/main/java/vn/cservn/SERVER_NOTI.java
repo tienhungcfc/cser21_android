@@ -13,8 +13,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.os.NetworkOnMainThreadException;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.android.gms.common.util.IOUtils;
 import com.google.gson.Gson;
@@ -31,7 +34,7 @@ public class SERVER_NOTI {
     Context context;
 
 
-    public SERVER_NOTI(Context context){
+    public SERVER_NOTI(Context context) {
         this.context = context;
     }
 
@@ -39,9 +42,8 @@ public class SERVER_NOTI {
 
         Gson gson = new Gson();
         SERVER_NOTI_Config config = gson.fromJson(result.params, SERVER_NOTI_Config.class);
-        runBackground(config,callback21);
+        runBackground(context,config, callback21);
     }
-
 
 
     public static void noti(Noti21 noti21, Context context) {
@@ -177,30 +179,34 @@ public class SERVER_NOTI {
         notificationManager.notify(noti_id, notificationBuilder.build());
     }
 
-    public void runBackground(final SERVER_NOTI_Config config, final Callback21 callback21) {
+    public static void runBackground(final  Context context,final SERVER_NOTI_Config config, final Callback21 callback21) {
         if (context == null || config == null) return;
         ;
-        new Runnable() {
+
+        final AsyncTask execute = new AsyncTask() {
+
             @Override
-            public void run() {
-
+            protected Object doInBackground(Object[] objects) {
+                String _url = "";
+                String step = "";
                 try {
-                    String _url = WebControl.toUrlWithsParams(config.server, config.serverParams);
-
-
+                    _url = WebControl.toUrlWithsParams(config.server, config.serverParams);
+                    step += "->url:" + _url;
                     InputStream in = null;
                     URL url = new URL(_url);
                     HttpURLConnection conn = null;
                     conn = (HttpURLConnection) url.openConnection();
+                    step += "->conn";
                     // 2. Open InputStream to connection
                     conn.connect();
                     in = conn.getInputStream();
+                    step += "->getInputStream";
                     byte[] bytes = IOUtils.toByteArray(in);
                     String str = new String(bytes, "UTF-8");
 
                     Response rsp = new Gson().fromJson(str, Response.class);
                     if (rsp != null && rsp.success) {
-                        if (rsp.data != null && rsp.data.notis !=null) {
+                        if (rsp.data != null && rsp.data.notis != null) {
                             for (Noti21 noti21 : rsp.data.notis) {
                                 noti(noti21, context);
                             }
@@ -210,27 +216,40 @@ public class SERVER_NOTI {
                     if (callback21 != null)
                         callback21.ok();
 
+                } catch (NetworkOnMainThreadException netError) {
+                    Log.i("NetThreadException:", step);
+                    netError.printStackTrace();
                 } catch (IOException e) {
+
+
                     e.printStackTrace();
                     if (callback21 != null) {
                         callback21.lastExp = e;
                         callback21.no();
                     }
                 }
+                return null;
             }
-        }.run();
+        };
+
+        execute.execute();
+
     }
 
-    public  class  Data{
+
+    public class Data {
         List<Noti21> notis;
     }
+
     class Response {
-        public  Boolean success;
+        public Boolean success;
         public Data data;
     }
 
 
+
 }
+
 class SERVER_NOTI_Config {
     public boolean enable;
     public int intervalMillis = 1000 * 60 * 15;
