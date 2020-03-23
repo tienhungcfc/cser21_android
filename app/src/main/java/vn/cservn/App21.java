@@ -533,32 +533,14 @@ public class App21 {
     }
 
     //de test
-    void  GET_SERVER_API(final Result result){
-        new Runnable() {
+    void  GET_SERVER_NOTI(final Result result){
+        new SERVER_NOTI().run(result, new Callback21(){
             @Override
-            public void run() {
-
-                try {
-                    InputStream in = null;
-                    URL url = new URL(result.params);
-                    HttpURLConnection conn = null;
-                    conn = (HttpURLConnection) url.openConnection();
-                    // 2. Open InputStream to connection
-                    conn.connect();
-                    in = conn.getInputStream(); 
-                    byte[] bytes = IOUtils.toByteArray(in);
-                    String str = new String(bytes, "UTF-8");
-
-                    result.success =true;
-                    result.data = str;
-                    App21Result(result);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            public void result(Result result) {
+                App21Result(result);
 
             }
-        }.run();
+        });
     }
 
 
@@ -625,12 +607,10 @@ class Callback21 {
     public void ok() {
     }
 
-    ;
-
     public void no() {
     }
 
-    ;
+    public void result(final Result result){}
 }
 
 abstract class ActivityResultID implements Runnable {
