@@ -459,7 +459,7 @@ public class App21 {
             final MainActivity m = (MainActivity) mContext;
 
 
-            AlarmReceiver21.noti(noti21, mContext, m.getIntent());
+            SERVER_NOTI.noti(noti21, mContext);
 
             result.success = true;
             App21Result(result);
@@ -470,23 +470,7 @@ public class App21 {
         }
     }
 
-    void ALARM_NOTI(final Result result) {
 
-        final String WAKE_LOCK = Manifest.permission.WAKE_LOCK;
-
-        _PERMISSION(result, WAKE_LOCK, new Runnable() {
-            @Override
-            public void run() {
-                AlarmReceiver21.setConfig(result.params, mContext);
-                new AlarmReceiver21().setAlarm(mContext);
-                ;
-                Result rs = result.copy();
-                rs.success = true;
-                App21Result(rs);
-
-            }
-        });
-    }
 
     void GET_PHONE(final Result result) {
         final String READ_PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
@@ -532,14 +516,39 @@ public class App21 {
         });
     }
 
-    //de test
-    void  GET_SERVER_NOTI(final Result result){
-        new SERVER_NOTI().run(result, new Callback21(){
+    void ALARM_NOTI(final Result result) {
+
+        final String WAKE_LOCK = Manifest.permission.WAKE_LOCK;
+
+        _PERMISSION(result, WAKE_LOCK, new Runnable() {
             @Override
-            public void result(Result result) {
+            public void run() {
+                AlarmReceiver21.setConfig(result.params, mContext);
+                new AlarmReceiver21().setAlarm(mContext);
+                ;
+                Result rs = result.copy();
+                rs.success = true;
+                App21Result(rs);
+
+            }
+        });
+    }
+    //de test truc tiep ALARM_NOTI
+    void  GET_SERVER_NOTI(final Result result){
+        new SERVER_NOTI(mContext).run(result, new Callback21(){
+            @Override
+            public void ok() {
+                result.success = true;
+                App21Result(result);
+            }
+            @Override
+            public void no() {
+                result.success = false;
+                if( this.lastExp !=null ) result.error = this.lastExp.getMessage();
                 App21Result(result);
 
             }
+
         });
     }
 
@@ -610,7 +619,7 @@ class Callback21 {
     public void no() {
     }
 
-    public void result(final Result result){}
+
 }
 
 abstract class ActivityResultID implements Runnable {
