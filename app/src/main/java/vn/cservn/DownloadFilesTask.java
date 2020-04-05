@@ -81,10 +81,7 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
                     callback.run();
                     return;
                 }
-
                 File[] fs = directory.listFiles();
-
-
                 for (File f : fs) {
                     try {
                         String[] Segs = fname.split("/");
@@ -123,7 +120,7 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
                 String[] segs = address.split("\\?")[0].split("/");
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
                 Date date = new Date(System.currentTimeMillis());
-                String fnasme = formatter.format(date) + "-" + segs[segs.length - 1];
+                String fname = formatter.format(date) + "-" + segs[segs.length - 1];
                 ContextWrapper cw = new ContextWrapper(app21.mContext.getApplicationContext());
                 File directory = cw.getDir("profile", Context.MODE_PRIVATE);
                 if (!directory.exists()) {
@@ -132,7 +129,7 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
 
 
                 // 3. Download and decode the bitmap using BitmapFactory
-                File file = new File(directory, fnasme);
+                File file = new File(directory, fname);
                 try (OutputStream output = new FileOutputStream(file)) {
                     byte[] buffer = new byte[4 * 1024]; // or other buffer size
                     int read;
@@ -143,7 +140,7 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
 
                     output.flush();
                     localPath = file.getAbsolutePath();
-                    setCache(address, localPath);
+                    //setCache(address, localPath);
                 }
 
 
@@ -198,7 +195,8 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
     public static String strBase64(String input){
         try{
             byte[] data = input.getBytes("UTF-8");
-            return  Base64.getUrlEncoder().encodeToString(data);
+            return android.util.Base64.encodeToString(data, android.util.Base64.NO_WRAP);
+            //return  Base64.getUrlEncoder().encodeToString(data);
         }catch (Exception ex){
             return "";
         }
@@ -242,4 +240,6 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
         public long len;
         public String abspath;
     }
+
+
 }

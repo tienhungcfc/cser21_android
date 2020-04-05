@@ -451,6 +451,17 @@ public class App21 {
         });
     }
 
+    void POST_TO_SERVER(final Result result) {
+        PostFileToServer postFileToServer = new PostFileToServer() {
+            @Override
+            protected void onPostExecute(Result result) {
+                App21Result(result);
+            }
+        };
+        postFileToServer.app21 = this;
+        postFileToServer.execute(result);
+    }
+
     void NOTI(final Result result) {
 
         try {
