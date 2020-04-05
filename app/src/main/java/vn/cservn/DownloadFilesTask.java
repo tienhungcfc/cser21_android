@@ -109,8 +109,8 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
         try {
             for (String address : addresses) {
 
-                localPath = getCache(address);
-                if (localPath != null && !"".equals(localPath)) break;
+               // localPath = getCache(address);
+               // if (localPath != null && !"".equals(localPath)) break;
                 ;
 
                 // 1. Declare a URL Connection
