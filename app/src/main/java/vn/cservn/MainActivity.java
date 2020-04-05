@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -84,10 +85,34 @@ public class MainActivity extends AppCompatActivity {
 
     // End Upload Var
 
+    public void setBackground(String value, boolean setKey) {
+
+        ConstraintLayout layout = findViewById(R.id.layout);
+        WebView wv = findViewById(R.id.wv);
+        String _v = null;
+        if (value != null) {
+            _v = value;
+            if (setKey)
+                setKey("bgColor", _v);
+        } else {
+            _v = getKey("bgColor", null);
+        }
+        int color = Color.parseColor(_v);
+        if (_v != null) {
+            layout.setBackgroundColor(color);
+            wv.setBackgroundColor(color);
+            getWindow().setStatusBarColor(color);
+            getWindow().setNavigationBarColor(color);
+        }
+
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 
         super.onActivityResult(requestCode, resultCode, intent);
+
 
         //Kiểm tra sử lý bởi app21
         if (app21.onActivityResult(requestCode, resultCode, intent, this)) return;
@@ -127,13 +152,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String getKey(String keyName, String df) {
-        String name= this.getPackageName();
+        String name = this.getPackageName();
         SharedPreferences sharedPref = getSharedPreferences("app", Context.MODE_PRIVATE);
         return sharedPref.getString(keyName, df);
     }
 
-    public  SharedPreferences getShared(String shareName){
-        return   getSharedPreferences(shareName, Context.MODE_PRIVATE);
+    public SharedPreferences getShared(String shareName) {
+        return getSharedPreferences(shareName, Context.MODE_PRIVATE);
     }
 
     public void setKey(String keyName, String value) {
@@ -183,11 +208,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_main);
+
+
         wv = (WebView) this.findViewById(R.id.wv);
         ANDROID = new ANDROID(this);
         wv.addJavascriptInterface(ANDROID, "ANDROID");
         wv.setBackgroundColor(Color.TRANSPARENT);
-
+        setBackground(null, false);
 
         WebSettings setting = wv.getSettings();
         //enble all
@@ -239,7 +266,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Mỗi một app có 1 domain riêng
         String domain = getString(R.string.app_domain);
-        @SuppressLint("ResourceType") String color = getString(R.color.colorPrimary);
+        @SuppressLint("ResourceType")
+        String color = getString(R.color.colorPrimary);
         String html = "";
 
         html = getAssetString("embed.html");
@@ -668,12 +696,8 @@ public class MainActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public void Do(String cmd, String value) {
-            if (cmd.equalsIgnoreCase("Test")) {
-                //DoJS(cmd,"AND-Test");
-            }
 
-            String v = "";
-            if (!value.equals(null)) v = value;
+            String v = value;
             String[] segs = (v).split(":");
 
             String key = "";

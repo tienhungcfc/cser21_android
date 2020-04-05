@@ -80,14 +80,9 @@ public class PostFileToServer extends AsyncTask<Result, Result, Result> {
                 ContextWrapper cw = new ContextWrapper(app21.mContext.getApplicationContext());
                 File directory = cw.getDir("profile", Context.MODE_PRIVATE);
                 File file = new File(directory, fname);
-
-
                 request.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\"" + fname + "\"\r\n\r\n");
                 request.write(fileToBytes(file));
-
-
                 request.writeBytes("\r\n");
-
                 request.writeBytes("--" + boundary + "--\r\n");
                 request.flush();
                 int respCode = connection.getResponseCode();
@@ -103,7 +98,7 @@ public class PostFileToServer extends AsyncTask<Result, Result, Result> {
                     case 307:
                     default:
                         rs.success = false;
-                        rs.error = "" + respCode + ":" + InputStreamToString(connection.getErrorStream());
+                        rs.error = "" + respCode;
                         ;
                         //do something sensible
                 }

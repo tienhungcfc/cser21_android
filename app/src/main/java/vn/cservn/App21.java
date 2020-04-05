@@ -88,7 +88,7 @@ public class App21 {
 
             MainActivity m = (MainActivity) mContext;
             m.evalJs(script);
-            ;
+
 
         } catch (Throwable tx) {
             Log.wtf("e", "loi", tx);
@@ -113,9 +113,10 @@ public class App21 {
 
 
             Method method = App21.class.getDeclaredMethod(rs.sub_cmd, Result.class);
-            method.setAccessible(true);
 
-            if (method == null) throw new Throwable("NO_" + rs.sub_cmd);
+
+            if (method.equals(null)) throw new Throwable("NO_" + rs.sub_cmd);
+            method.setAccessible(true);
             method.invoke(this, rs);
 
         } catch (Throwable tx) {
@@ -196,9 +197,9 @@ public class App21 {
         }
         File mypath = new File(directory, filename);
 
-        FileOutputStream fos = null;
+
         try {
-            fos = new FileOutputStream(mypath);
+            FileOutputStream fos = new FileOutputStream(mypath);
             bmp.compress(filename.endsWith(".png") ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG, 100, fos);
             fos.close();
         } catch (Exception e) {
@@ -240,21 +241,30 @@ public class App21 {
         return formatter.format(date);
     }
 
-    void BASE64(final Result result) {
+    void BACKGROUND(final Result result) {
+        Result rs = result.copy();
+        rs.success = true;
+        MainActivity m = (MainActivity) mContext;
 
+        String[] arr = rs.params.split(";");
+
+        m.setBackground(arr[0], arr.length > 1 && arr[1].equals("1"));
+        App21Result(rs);
+
+
+    }
+
+    void BASE64(final Result result) {
         new Runnable() {
             @Override
             public void run() {
                 Result rs = result.copy();
                 rs.success = true;
-                App21Result(rs);;
-
+                App21Result(rs);
                 Base64Require rq = new Gson().fromJson(rs.params, Base64Require.class);
-
                 MainActivity m = (MainActivity) mContext;
                 DownloadFilesTask downloadFilesTask = new DownloadFilesTask();
                 String base64 = downloadFilesTask.toBase64(rq.path);
-
                 m.evalJs("" + rq.callback + "('" + base64 + "')");
             }
         }.run();
@@ -290,20 +300,26 @@ public class App21 {
                                 @Override
                                 public void run() {
                                     if (this.resultCode == Activity.RESULT_OK) {
-                                        Bitmap bp = (Bitmap) this.intent.getExtras().get("data");
-
-                                        //imgCapture.setImageBitmap(bp);
-
                                         Result rs = result.copy();
-                                        Map<String, String> map = mapParams(rs.params);
-                                        String ext = map.containsKey("ext") ? map.get("ext") : "png";
-                                        String pref = map.containsKey("pref") ? map.get("pref") : "IMG";
-                                        rs.success = true;
-                                        rs.data = "OK";
+                                        try {
+                                            Bitmap bp = (Bitmap) this.intent.getExtras().get("data");
 
-                                        File f = save(bp, pref + now() + "." + ext);
-                                        rs.data = "file://" + f.getAbsolutePath();
-                                        App21Result(rs);
+                                            //imgCapture.setImageBitmap(bp);
+
+
+                                            Map<String, String> map = mapParams(rs.params);
+                                            String ext = map.containsKey("ext") ? map.get("ext") : "png";
+                                            String pref = map.containsKey("pref") ? map.get("pref") : "IMG";
+                                            rs.success = true;
+                                            rs.data = "OK";
+
+                                            File f = save(bp, pref + now() + "." + ext);
+                                            rs.data = "file://" + f.getAbsolutePath();
+                                            App21Result(rs);
+                                        } catch (NullPointerException n) {
+                                            rs.success = false;
+                                            rs.error = n.getLocalizedMessage();
+                                        }
                                     } else if (resultCode == Activity.RESULT_CANCELED) {
                                         Result rs = result.copy();
                                         rs.success = false;
