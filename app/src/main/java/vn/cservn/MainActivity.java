@@ -16,12 +16,14 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.view.View;
 import android.webkit.ValueCallback;
@@ -35,6 +37,7 @@ import com.google.gson.Gson;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.WebView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -51,6 +54,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
 
 /*
 Thay đổi cấu hình cho từng app
@@ -85,24 +90,57 @@ public class MainActivity extends AppCompatActivity {
 
     // End Upload Var
 
-    public void setBackground(String value, boolean setKey) {
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void setBackground(String params) {
+//
+        //arr[0], arr.length>1 && arr[1].equals("1") ,arr.length > 2 && arr[2].equals("1")
 
+        if (params == null) {
+            params = getKey("bgColor", null);
+        }
+        if (params == null) return;
+
+
+        String[] arr = params.split(";");
+        String _v = arr[0];
+        final boolean textStatusBarWhite = arr.length > 1 && arr[1].equals("1");
+        boolean setKey = arr.length > 2 && arr[2].equals("1");
         ConstraintLayout layout = findViewById(R.id.layout);
         WebView wv = findViewById(R.id.wv);
-        String _v = null;
-        if (value != null) {
-            _v = value;
-            if (setKey)
-                setKey("bgColor", _v);
-        } else {
-            _v = getKey("bgColor", null);
+
+        if (setKey) {
+            setKey("bgColor", params);
         }
-        int color = Color.parseColor(_v);
-        if (_v != null) {
-            layout.setBackgroundColor(color);
-            wv.setBackgroundColor(color);
-            getWindow().setStatusBarColor(color);
-            getWindow().setNavigationBarColor(color);
+        try {
+            final int color = Color.parseColor(_v);
+            if (_v != null) {
+                layout.setBackgroundColor(color);
+                wv.setBackgroundColor(color);
+
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        // Stuff that updates the UI
+                        Window w = getWindow();
+                        w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+                        w.setStatusBarColor(color);
+
+                        View v = w.getDecorView();
+
+
+                        if (textStatusBarWhite)
+                            v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                        else
+                            v.setSystemUiVisibility(0);
+                    }
+                });
+            }
+        } catch (Exception ex) {
+            Log.i("setBackground", ex.getMessage());
         }
 
 
@@ -194,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
         /*
         Test
         * */
@@ -212,9 +251,10 @@ public class MainActivity extends AppCompatActivity {
 
         wv = (WebView) this.findViewById(R.id.wv);
         ANDROID = new ANDROID(this);
-        wv.addJavascriptInterface(ANDROID, "ANDROID");
         wv.setBackgroundColor(Color.TRANSPARENT);
-        setBackground(null, false);
+        setBackground(null);
+        wv.addJavascriptInterface(ANDROID, "ANDROID");
+
 
         WebSettings setting = wv.getSettings();
         //enble all

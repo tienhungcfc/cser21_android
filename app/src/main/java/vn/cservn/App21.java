@@ -246,9 +246,8 @@ public class App21 {
         rs.success = true;
         MainActivity m = (MainActivity) mContext;
 
-        String[] arr = rs.params.split(";");
 
-        m.setBackground(arr[0], arr.length > 1 && arr[1].equals("1"));
+        m.setBackground(rs.params);
         App21Result(rs);
 
 

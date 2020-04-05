@@ -7,7 +7,7 @@
     <application
         android:name=".APP"
         android:allowBackup="true"
-        android:background="@android:color/white"
+        android:background="@android:color/black"
         android:debuggable="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
