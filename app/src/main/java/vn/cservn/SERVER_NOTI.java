@@ -80,7 +80,8 @@ public class SERVER_NOTI {
                 //.setColor(Color.RED)
                 .setLights(Color.RED, 1000, 300)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
-                .setSmallIcon(R.mipmap.ic_launcher);
+                .setSmallIcon(R.mipmap.ic_launcher)
+
 
         //data -> customize -> display noti
         //1
