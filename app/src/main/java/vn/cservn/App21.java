@@ -246,10 +246,16 @@ public class App21 {
             @Override
             public void run() {
                 Result rs = result.copy();
+                rs.success = true;
+                App21Result(rs);;
+
+                Base64Require rq = new Gson().fromJson(rs.params, Base64Require.class);
+
                 MainActivity m = (MainActivity) mContext;
                 DownloadFilesTask downloadFilesTask = new DownloadFilesTask();
-                String base64 = downloadFilesTask.toBase64(result.params);
-                m.evalJs("__BASE64('" + base64 + "')");
+                String base64 = downloadFilesTask.toBase64(rq.path);
+
+                m.evalJs("" + rq.callback + "('" + base64 + "')");
             }
         }.run();
     }
@@ -664,4 +670,7 @@ class SMS {
     public String number;
     public String smsText;
 }
-
+class Base64Require{
+    public String path;
+    public String callback;
+}
