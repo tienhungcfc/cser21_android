@@ -18,8 +18,11 @@ import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
+
 import com.google.gson.Gson;
+
 import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -557,25 +560,16 @@ public class App21 {
 
     void IMAGE_ROTATE(final Result result) {
 
-        ImageUtil imageUtil = new ImageUtil();
+        ImageUtil imageUtil = new ImageUtil() {
+            @Override
+            protected void onPostExecute(Result rs) {
+                App21Result(rs);
+            }
+        };
         imageUtil.downloadFilesTask = new DownloadFilesTask();
         imageUtil.downloadFilesTask.app21 = this;
-        imageUtil.Rotate(result.params, new Callback21() {
-            @Override
-            public void ok() {
-                Result rs = result.copy();
-                rs.success = true;
-                App21Result(rs);
-            }
+        imageUtil.execute(result);
 
-            @Override
-            public void no() {
-                Result rs = result.copy();
-                rs.success = false;
-                rs.error = this.lastExp.getMessage();
-                App21Result(rs);
-            }
-        });
     }
 
     void VIBRATOR(final Result result) {

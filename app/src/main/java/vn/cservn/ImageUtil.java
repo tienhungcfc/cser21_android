@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 
@@ -11,24 +12,27 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class ImageUtil {
+public class ImageUtil extends AsyncTask<Result, Result, Result> {
 
     public DownloadFilesTask downloadFilesTask;
 
-    public void Rotate(String params, Callback21 callback21) {
+
+    @Override
+    protected Result doInBackground(Result... results) {
+        Result rs = null;
+
+        for (Result result : results) {
+            rs = result.copy();
+            try {
+                ImageUtilInfo imageUtilInfo = new Gson().fromJson(result.params, ImageUtilInfo.class);
+
+                String imgPath = "";
+                File file = downloadFilesTask.getFile(imageUtilInfo.path);
+                Bitmap bitmap = downloadFilesTask.getBitmap(imageUtilInfo.path);
+                // ExifInterface exif = new ExifInterface(imgPath);
 
 
-        try {
-
-            ImageUtilInfo imageUtilInfo = new Gson().fromJson(params, ImageUtilInfo.class);
-
-            String imgPath = "";
-            File file = downloadFilesTask.getFile(imageUtilInfo.path);
-            Bitmap bitmap = downloadFilesTask.getBitmap(imageUtilInfo.path);
-            // ExifInterface exif = new ExifInterface(imgPath);
-
-
-            Matrix matrix = new Matrix();
+                Matrix matrix = new Matrix();
             /*
              int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
             switch (orientation) {
@@ -45,26 +49,30 @@ public class ImageUtil {
                     break;
             }
             */
-            matrix.postRotate(imageUtilInfo.degrees);
-            Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
-            FileOutputStream out = new FileOutputStream(file.getAbsoluteFile());
+                matrix.postRotate(imageUtilInfo.degrees);
+                Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
+                FileOutputStream out = new FileOutputStream(file.getAbsoluteFile());
 
-            String ext = downloadFilesTask.getExt(imageUtilInfo.path);
-            switch (ext) {
-                case "png":
-                    rotatedBitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
-                    break;
-                default://jpg
-                    rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out); // bmp is your Bitmap instance
-                    break;
+                String ext = downloadFilesTask.getExt(imageUtilInfo.path);
+                switch (ext) {
+                    case "png":
+                        rotatedBitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+                        break;
+                    default://jpg
+                        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out); // bmp is your Bitmap instance
+                        break;
+                }
+
+                rs.success = true;
+
+            } catch (Exception ex) {
+                rs.success = false;
+                rs.error = ex.getMessage();
             }
-
-
-            callback21.ok();
-        } catch (Exception ex) {
-            callback21.lastExp = ex;
-            callback21.no();
         }
+
+
+        return rs;
     }
 }
 
