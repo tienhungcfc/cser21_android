@@ -180,7 +180,7 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
     public String getExt(String path) {
         String[] segs = path.split("\\?")[0].split("/");
         String fname = segs[segs.length - 1];
-        String[] segs2 = fname.split(".");
+        String[] segs2 = fname.split("\\.");
         String ext = segs2[segs2.length - 1];
         return ext.toLowerCase();
     }
