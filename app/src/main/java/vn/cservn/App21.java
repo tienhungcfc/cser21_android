@@ -3,56 +3,28 @@ package vn.cservn;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlarmManager;
-import android.app.Instrumentation;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.location.Location;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Looper;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
-import android.webkit.ValueCallback;
-
-import com.google.android.gms.common.util.IOUtils;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
-
 import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -606,6 +578,22 @@ public class App21 {
         });
     }
 
+    void VIBRATOR(final Result result) {
+
+        VibratorInfo vibratorInfo = new Gson().fromJson(result.params, VibratorInfo.class);
+
+        Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+// Vibrate for 500 milliseconds
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(vibratorInfo.milliseconds, vibratorInfo.amplitude));
+        } else {
+            //deprecated in API 26
+            v.vibrate(vibratorInfo.milliseconds);
+        }
+        result.success = true;
+        App21Result(result);
+    }
+
     public boolean onActivityResult(int requestCode, int resultCode, Intent intent, Activity activity) {
         // Activity act = activity.getCallingActivity().;
 
@@ -721,4 +709,9 @@ class SMS {
 class Base64Require {
     public String path;
     public String callback;
+}
+
+class VibratorInfo {
+    public int amplitude;
+    public int milliseconds;
 }
