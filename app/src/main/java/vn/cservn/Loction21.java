@@ -14,14 +14,19 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Loction21 {
     public Context mContext;
+    public Result sourceResult;
+    public App21 app21;
 
     public boolean isLocationEnabled() {
         LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
@@ -56,16 +61,19 @@ public class Loction21 {
 
     private void updateClient(Location location) {
         JSONObject json = new JSONObject();
+        Map<String, Object> data = new HashMap<String, Object>();
         try {
-
-
             for (Method m : location.getClass().getMethods()
-                 ) {
-                try{
+            ) {
+                try {
                     String n = m.getName();
-                    if(n.startsWith("get")) json.put(m.getName(), m.invoke(location));
-                }
-                catch (Exception ex){
+                    if (n.startsWith("get")) {
+                        Object v = m.invoke(location);
+                        json.put(m.getName(), v);
+
+
+                    }
+                } catch (Exception ex) {
                     //
                 }
             }
@@ -74,14 +82,25 @@ public class Loction21 {
             json.put("lat", location.getLatitude());
             json.put("lng", location.getLongitude());
 
+            String _d = json.toString();
+            data = new Gson().fromJson(_d, data.getClass());
+
+
         } catch (Exception e) {
             //
         }
-        String s = json.toString();
-        String script = jsCallbackName + "('BASE64:" + DownloadFilesTask.strBase64(s) + "')";
+        if (sourceResult != null && app21 != null) {
+            sourceResult.success = true;
+            sourceResult.data = data;
+            app21.App21Result(sourceResult);
+        }
+
+
+        //  String s = json.toString();
+        //String script = jsCallbackName + "('BASE64:" + DownloadFilesTask.strBase64(s) + "')";
         // wv.evaluateJavascript(script, null);
-        MainActivity m = (MainActivity) mContext;
-        m.evalJs(script);
+        //MainActivity m = (MainActivity) mContext;
+        //m.evalJs(script);
     }
 
     private LocationCallback mLocationCallback = new LocationCallback() {

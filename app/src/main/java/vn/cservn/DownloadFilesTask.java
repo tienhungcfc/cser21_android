@@ -3,6 +3,7 @@ package vn.cservn;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -160,6 +161,29 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
     }
 
 
+    public File getFile(String path) {
+        String[] segs = path.split("\\?")[0].split("/");
+        String fname = segs[segs.length - 1];
+        ContextWrapper cw = new ContextWrapper(app21.mContext.getApplicationContext());
+        File directory = cw.getDir("profile", Context.MODE_PRIVATE);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        return new File(directory, fname);
+    }
+
+    public Bitmap getBitmap(String path) {
+        File f = getFile(path);
+        return BitmapFactory.decodeFile(f.getAbsolutePath());
+    }
+
+    public String getExt(String path) {
+        String[] segs = path.split("\\?")[0].split("/");
+        String fname = segs[segs.length - 1];
+        String[] segs2 = fname.split(".");
+        String ext = segs2[segs2.length - 1];
+        return ext.toLowerCase();
+    }
 
     public List<FileInfo> getlist() {
 

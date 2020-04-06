@@ -81,7 +81,7 @@ public class App21 {
             Gson gson = new Gson();
 
             String s = gson.toJson(result);
-            s = "BASE64:"+DownloadFilesTask.strBase64(s); //Convert to 64 de trach ky tu dc biet
+            s = "BASE64:" + DownloadFilesTask.strBase64(s); //Convert to 64 de trach ky tu dc biet
 
             String script = "App21Result('" + s + "')";
             // wv.evaluateJavascript(script, null);
@@ -127,32 +127,6 @@ public class App21 {
             rs.data = "";
             App21Result(rs);
         }
-    }
-
-    void REBOOT(Result result) {
-
-        int miliSecond = Integer.parseInt(result.params);
-
-        Result rs = result.copy();
-        rs.success = true;
-        rs.data = "REBOOT AFTER " + miliSecond + "(MS)";
-
-        App21Result(rs);
-
-
-        Async21.run(miliSecond, new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(mContext, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                AlarmManager mgr = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent);
-                System.exit(0);
-            }
-        });
-
-
     }
 
     void _PERMISSION(final Result result, final String PermissionName, final Runnable granted) {
@@ -235,10 +209,38 @@ public class App21 {
         return map;
     }
 
+    Loction21 loction21 = null;
+
     String now() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
         Date date = new Date(System.currentTimeMillis());
         return formatter.format(date);
+    }
+
+    void REBOOT(Result result) {
+
+        int miliSecond = Integer.parseInt(result.params);
+
+        Result rs = result.copy();
+        rs.success = true;
+        rs.data = "REBOOT AFTER " + miliSecond + "(MS)";
+
+        App21Result(rs);
+
+
+        Async21.run(miliSecond, new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(mContext, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                AlarmManager mgr = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent);
+                System.exit(0);
+            }
+        });
+
+
     }
 
     void BACKGROUND(final Result result) {
@@ -394,12 +396,11 @@ public class App21 {
         });
     }
 
-    Loction21 loction21 = null;
-
     void LOCATION(final Result result) {
         final MainActivity m = (MainActivity) mContext;
         final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
         final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+        final App21 t = this;
         _PERMISSION(result, COARSE_LOCATION + "," + FINE_LOCATION, new Runnable() {
             @Override
             public void run() {
@@ -410,10 +411,9 @@ public class App21 {
                 }
                 if (loction21.isLocationEnabled()) {
                     Result rs = result.copy();
-                    rs.success = true;
-                    App21Result(rs);
-                    ;
 
+                    loction21.app21 = t;
+                    loction21.sourceResult = rs;
                     loction21.run(rs.params);
 
                 } else {
@@ -502,8 +502,6 @@ public class App21 {
         }
     }
 
-
-
     void GET_PHONE(final Result result) {
         final String READ_PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
         _PERMISSION(result, READ_PHONE_STATE, new Runnable() {
@@ -529,7 +527,7 @@ public class App21 {
 
                 try {
 
-                    SMS sms= new Gson().fromJson(result.params, SMS.class);
+                    SMS sms = new Gson().fromJson(result.params, SMS.class);
 
                     SmsManager.getDefault().sendTextMessage(sms.number, null, sms.smsText, null, null);
                     Result rs = result.copy();
@@ -565,18 +563,19 @@ public class App21 {
             }
         });
     }
-    //de test truc tiep ALARM_NOTI
-    void  GET_SERVER_NOTI(final Result result){
-        new SERVER_NOTI(mContext).run(result, new Callback21(){
+
+    void GET_SERVER_NOTI(final Result result) {
+        new SERVER_NOTI(mContext).run(result, new Callback21() {
             @Override
             public void ok() {
                 result.success = true;
                 App21Result(result);
             }
+
             @Override
             public void no() {
                 result.success = false;
-                if( this.lastExp !=null ) result.error = this.lastExp.getMessage();
+                if (this.lastExp != null) result.error = this.lastExp.getMessage();
                 App21Result(result);
 
             }
@@ -584,6 +583,28 @@ public class App21 {
         });
     }
 
+    void IMAGE_ROTATE(final Result result) {
+
+        ImageUtil imageUtil = new ImageUtil();
+        imageUtil.downloadFilesTask = new DownloadFilesTask();
+        imageUtil.downloadFilesTask.app21 = this;
+        imageUtil.Rotate(result.params, new Callback21() {
+            @Override
+            public void ok() {
+                Result rs = result.copy();
+                rs.success = true;
+                App21Result(rs);
+            }
+
+            @Override
+            public void no() {
+                Result rs = result.copy();
+                rs.success = false;
+                rs.error = this.lastExp.getMessage();
+                App21Result(rs);
+            }
+        });
+    }
 
     public boolean onActivityResult(int requestCode, int resultCode, Intent intent, Activity activity) {
         // Activity act = activity.getCallingActivity().;
@@ -696,7 +717,8 @@ class SMS {
     public String number;
     public String smsText;
 }
-class Base64Require{
+
+class Base64Require {
     public String path;
     public String callback;
 }
