@@ -232,12 +232,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
-        /*
-        Test
-        * */
-
-
         //go
         super.onCreate(savedInstanceState);
 
@@ -329,6 +323,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        evalJs("AppResume()");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        evalJs("AppPause()");
+    }
+
     String getAssetString(String name) {
         String str = "";
         try {
@@ -360,6 +367,13 @@ public class MainActivity extends AppCompatActivity {
         return map;
     }
 
+    public Map<String, Object> getBundle() {
+        try {
+            return mapBundle(getIntent().getExtras());
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -772,4 +786,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
 }

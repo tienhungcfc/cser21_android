@@ -477,6 +477,12 @@ public class App21 {
         }
     }
 
+    void NOTI_DATA(final Result result) {
+        result.data = ((MainActivity) mContext).getBundle();
+        result.success = true;
+        App21Result(result);
+    }
+
     void GET_PHONE(final Result result) {
         final String READ_PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
         _PERMISSION(result, READ_PHONE_STATE, new Runnable() {

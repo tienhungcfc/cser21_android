@@ -75,6 +75,7 @@ public class PostFileToServer extends AsyncTask<Result, Result, Result> {
                 request.writeBytes("Content-Disposition: form-data; name=\"description\"\r\n\r\n");
                 request.writeBytes("--" + boundary + "\r\n");
 
+
                 String[] segs = postInfo.path.split("\\?")[0].split("/");
                 String fname = segs[segs.length - 1];
                 ContextWrapper cw = new ContextWrapper(app21.mContext.getApplicationContext());
