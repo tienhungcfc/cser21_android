@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
         String color = getString(R.color.colorPrimary);
         String html = "";
 
-        html = getAssetString("embed.html");
+        html = getAssetString("embed21.html");
         //
 
         //upload

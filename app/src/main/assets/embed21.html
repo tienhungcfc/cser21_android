@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport"
+          content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes"/>
+    <title></title>
+    <meta http-equiv="Content-Language" content="vi"/>
+    <style type="text/css">
+        *, ::after, ::before {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            text-align: left;
+            background-color: #fff;
+        }
+
+        #DOT {
+            position: relative;
+            display: inline-block
+        }
+
+            #DOT:after {
+                display: inline-block;
+                position: absolute;
+                content: attr(data-dot);
+                display: inline-block;
+            }
+
+        #ANDROID_ONBACK_MESS {
+            z-index: 9999;
+            position: fixed;
+            top: auto;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px;
+            text-align: center;
+            background: #fff;
+            box-shadow: 0 0 3px 0 rgba(0,0,0,0.5);
+            display: none
+        }
+
+    </style>
+    <script>
+        /**
+         * Mỗi khi Người dùng bấm nút back trên dt
+         * ANDROID_ONBACK sẽ đc thực thị
+         */
+        var ANDROID_ONBACK = function () {
+            if (!window.ANDROID) return;
+            if (!ANDROID.IsNoBack) {
+                document.getElementById('ANDROID_ONBACK_MESS').style.display = 'block';
+            }
+
+        }
+        var ANDROID_HIDE = function () {
+            window.ANDROID && ANDROID.NoBack(true);
+            document.getElementById('ANDROID_ONBACK_MESS').style.display = 'none';
+        }
+
+
+    </script>
+</head>
+<body>
+<script type="text/javascript">
+        var PREV_ERROR = false;
+        function ERROR() {
+            PREV_ERROR = true;
+            PREPARE();
+            var LOADERs = document.getElementById('LOADER');
+            //LOADERs.innerHTML = '<div class="preloaderEzs"></div>';
+        }
+        function PREPARE() {
+            var LOADER = document.getElementById('LOADER');
+            var sheet = document.createElement('style');
+            if (!LOADER) {
+                LOADER = document.createElement('div');
+                LOADER.innerHTML = '<div class="preloaderEzs"><div class="preloaderEzs-animation"><div class="preloaderEzs-spinner"></div><div class="preloaderEzs-text"><span data-text-preloader="E" class="letters-loading">E</span><span data-text-preloader="Z" class="letters-loading">Z</span><span data-text-preloader="S" class="letters-loading">S</span><span data-text-preloader="." class="letters-loading">.</span><span data-text-preloader="V" class="letters-loading">V</span><span data-text-preloader="N" class="letters-loading">N</span></div><div class="preloaderEzs-loading">Loading</div></div><div class="preloaderEzs-loader"><div class="preloaderEzs-row"><div class="preloaderEzs-col-3"><div class="preloaderEzs-bg"></div></div><div class="preloaderEzs-col-3"><div class="preloaderEzs-bg"></div></div><div class="preloaderEzs-col-3"><div class="preloaderEzs-bg"></div></div><div class="preloaderEzs-col-3"><div class="preloaderEzs-bg"></div></div></div></div></div>';
+                sheet.innerHTML = ` `;
+                LOADER.id = 'LOADER';
+                LOADER.setAttribute('style', 'position: fixed; top: 0; left: 0; width: 100%; height: 100vh;');
+                document.body.appendChild(sheet);
+                document.body.appendChild(LOADER);
+            }
+            var ANDROID_ONBACK_MESS = document.getElementById('ANDROID_ONBACK_MESS');
+            if (!ANDROID_ONBACK_MESS) {
+                ANDROID_ONBACK_MESS = document.createElement('div');
+                ANDROID_ONBACK_MESS.id = "ANDROID_ONBACK_MESS";
+                ANDROID_ONBACK_MESS.innerHTML = 'Bấm thêm lần nữa để thoát';
+                document.body.appendChild(ANDROID_ONBACK_MESS);
+            }
+        }
+
+        var VER = '1001';
+
+        function LOAD(src, fn) {
+
+            if (PREV_ERROR) return;
+            PREPARE();
+
+            function getExt(str) {
+                var a = ((str || '').split('?')[0] || '').split('.');
+                return a.length > 1 ? a.pop() : '';
+            }
+
+            var ext = getExt(src);
+            var arr = (src || '').split('?');
+            var _src = arr[0] + (arr.length > 1 ? '?' + arr[1] : '');
+
+            switch (ext) {
+                case 'css':
+                    var l = document.createElement('link');
+                    l.href = _src + (arr.length > 1 ? '&' : '?') + 'ver=' + VER;
+                    l.onerror = ERROR;
+                    l.rel = "stylesheet";
+                    l.type = "text/css";
+                    l.onload = fn || null;
+                    document.head.appendChild(l);
+                    break;
+                default:
+                    var s = document.createElement('script');
+                    s.src = _src + (arr.length > 1 ? '&' : '?') + 'ver=' + VER;
+                    s.type = "text/javascript";
+                    s.onerror = ERROR;
+                    s.onload = fn || null;
+                    document.head.appendChild(s);
+                    break;
+            }
+        };
+
+        /**
+         * gửi yêu cầu tới app IOS || app Android
+         */
+        function app_request(cmd, value) {
+            if (window['ANDROID'])
+                ANDROID.Do(cmd, value);
+            else
+                window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.IOS.postMessage({
+                    "cmd": cmd,
+                    "value": value
+                })
+        }
+
+        /**
+         * App trả lời
+         */
+        function app_response(cmd, value) {
+
+
+        }
+
+
+
+        function box(fn) {
+            try {
+                fn && fn();
+            } catch (e) {
+
+            }
+        }
+
+        const SCRIPT_START = 'SCRIPT_START';
+        const SCRIPT_INDEX = 'SCRIPT_INDEX';
+
+
+
+        function __embedJs(s) {
+            var t = document.createElement('script');
+            t.innerHTML = s;
+            document.body.appendChild(t);
+        }
+
+        /*
+         Step1: SCRIPT_START
+         */
+        box(() => {
+            var n = SCRIPT_START;
+            var s = localStorage.getItem(n);
+            if (n) {
+                __embedJs(s);
+            }
+        });
+
+        /*
+         Step2: SCRIPT_INDEX
+         */
+        box(() => {
+
+            var link = '/app/index21.aspx';
+
+            function err() {
+                var script = localStorage.getItem(SCRIPT_INDEX);
+                script && __embedJs(script);
+            }
+            fetch(link)
+                .then((data) => {
+
+                    if (data.status === 200) {
+                        data.text().then(function (script) {
+                            localStorage.setItem(SCRIPT_INDEX, script);
+                            // _embed(script);
+                            __embedJs(script);
+                        })
+                    } else err();
+
+                }).catch((error) => {
+                    err();
+                });
+        });
+
+
+</script>
+</body>
+</html>
