@@ -1,5 +1,8 @@
 package vn.cservn;
 
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.annotation.SuppressLint;
 import android.Manifest;
@@ -37,6 +40,7 @@ import com.google.gson.Gson;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -146,10 +150,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void wvVisibility(boolean VISIBLE) {
-        if (wv != null) {
-            wv.setVisibility(VISIBLE ? View.VISIBLE : View.INVISIBLE);
-        }
+    public void wvVisibility(final boolean VISIBLE) {
+
+
+        new Runnable() {
+            @Override
+            public void run() {
+
+                pl.droidsonroids.gif.GifImageView loader = (pl.droidsonroids.gif.GifImageView) findViewById(R.id.loader);
+                if (loader != null)
+                    loader.setVisibility(VISIBLE ? View.VISIBLE : View.INVISIBLE);
+            }
+        }.run();
+
+
     }
 
     @Override
@@ -233,6 +247,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private Bitmap getBitmapFromAsset(String strName) throws IOException {
+        AssetManager assetManager = getAssets();
+        InputStream istr = assetManager.open(strName);
+        Bitmap bitmap = BitmapFactory.decodeStream(istr);
+        return bitmap;
+    }
 
     @SuppressLint({"ClickableViewAccessibility", "WrongViewCast"})
     @Override
@@ -248,7 +268,9 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        //loadr
 
+        //
         wv = (WebView) this.findViewById(R.id.wv);
         ANDROID = new ANDROID(this);
         wv.setBackgroundColor(Color.TRANSPARENT);
@@ -256,7 +278,6 @@ public class MainActivity extends AppCompatActivity {
         //Luôn để mầu trắng
         //setBackground(null);
 
-        wvVisibility(true);
 
         wv.addJavascriptInterface(ANDROID, "ANDROID");
 

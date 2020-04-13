@@ -19,4 +19,10 @@
         tools:layout_editor_absoluteX="343dp"
         tools:layout_editor_absoluteY="0dp" />
 
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/loader"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/loader" />
 </android.support.constraint.ConstraintLayout>
