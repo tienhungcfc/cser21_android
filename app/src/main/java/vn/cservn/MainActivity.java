@@ -252,7 +252,10 @@ public class MainActivity extends AppCompatActivity {
         wv = (WebView) this.findViewById(R.id.wv);
         ANDROID = new ANDROID(this);
         wv.setBackgroundColor(Color.TRANSPARENT);
-        setBackground(null);
+
+        //Luôn để mầu trắng
+        //setBackground(null);
+
         wvVisibility(true);
 
         wv.addJavascriptInterface(ANDROID, "ANDROID");

@@ -595,10 +595,19 @@ public class App21 {
     }
 
     void WV_VISIBLE(final Result result) {
-        result.success = true;
-        MainActivity m = (MainActivity) mContext;
-        m.wvVisibility(result.params == "1");
-        App21Result(result);
+
+        (new Runnable() {
+            @Override
+            public void run() {
+                Result rs = result.copy();
+                rs.success = true;
+                MainActivity m = (MainActivity) mContext;
+                m.wvVisibility(rs.params == "1");
+                App21Result(rs);
+            }
+        }).run();
+
+
     }
 
     public boolean onActivityResult(int requestCode, int resultCode, Intent intent, Activity activity) {
