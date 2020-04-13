@@ -146,6 +146,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void wvVisibility(boolean VISIBLE) {
+        if (wv != null) {
+            wv.setVisibility(VISIBLE ? View.VISIBLE : View.INVISIBLE);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 
@@ -247,6 +253,8 @@ public class MainActivity extends AppCompatActivity {
         ANDROID = new ANDROID(this);
         wv.setBackgroundColor(Color.TRANSPARENT);
         setBackground(null);
+        wvVisibility(true);
+
         wv.addJavascriptInterface(ANDROID, "ANDROID");
 
 

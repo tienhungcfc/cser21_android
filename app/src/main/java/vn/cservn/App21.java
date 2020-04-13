@@ -594,6 +594,13 @@ public class App21 {
         App21Result(result);
     }
 
+    void WV_VISIBLE(final Result result) {
+        result.success = true;
+        MainActivity m = (MainActivity) mContext;
+        m.wvVisibility(result.params == "1");
+        App21Result(result);
+    }
+
     public boolean onActivityResult(int requestCode, int resultCode, Intent intent, Activity activity) {
         // Activity act = activity.getCallingActivity().;
 
