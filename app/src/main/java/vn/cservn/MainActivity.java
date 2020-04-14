@@ -156,8 +156,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 wv.setVisibility(VISIBLE ? View.VISIBLE : View.INVISIBLE);
-                ImageView iv = (ImageView)findViewById(R.id.imageCover);
-                iv.setVisibility(VISIBLE ? View.INVISIBLE : View.VISIBLE);
+
             }
         });
 
