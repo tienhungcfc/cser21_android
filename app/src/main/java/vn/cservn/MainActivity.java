@@ -152,14 +152,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void wvVisibility(final boolean VISIBLE) {
 
-
-        new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
+                wv.setVisibility(VISIBLE ? View.VISIBLE : View.INVISIBLE);
 
             }
-        }.run();
+        });
+
 
 
     }
