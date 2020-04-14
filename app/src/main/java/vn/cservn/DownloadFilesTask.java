@@ -118,7 +118,9 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
                 conn.connect();
                 in = conn.getInputStream();
 
-                String[] segs = address.split("\\?")[0].split("/");
+                String nohash = address.split("\\#")[0];
+
+                String[] segs = nohash.split("\\?")[0].split("/");
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
                 Date date = new Date(System.currentTimeMillis());
                 String fname = formatter.format(date) + "-" + segs[segs.length - 1];
