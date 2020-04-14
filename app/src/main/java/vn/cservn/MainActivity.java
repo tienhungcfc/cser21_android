@@ -157,9 +157,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                pl.droidsonroids.gif.GifImageView loader = (pl.droidsonroids.gif.GifImageView) findViewById(R.id.loader);
-                if (loader != null)
-                    loader.setVisibility(VISIBLE ? View.VISIBLE : View.INVISIBLE);
+
             }
         }.run();
 
