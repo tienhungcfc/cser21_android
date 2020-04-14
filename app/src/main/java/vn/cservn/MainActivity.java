@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         String _v = arr[0];
         final boolean textStatusBarWhite = arr.length > 1 && arr[1].equals("1");
         boolean setKey = arr.length > 2 && arr[2].equals("1");
-        ConstraintLayout layout = findViewById(R.id.layout);
+
         WebView wv = findViewById(R.id.wv);
 
         if (setKey) {
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             final int color = Color.parseColor(_v);
             if (_v != null) {
-                layout.setBackgroundColor(color);
+
                 wv.setBackgroundColor(color);
 
                 runOnUiThread(new Runnable() {
