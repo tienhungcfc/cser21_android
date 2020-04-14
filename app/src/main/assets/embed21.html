@@ -1,11 +1,10 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport"
-          content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes" />
     <title></title>
-    <meta http-equiv="Content-Language" content="vi"/>
+    <meta http-equiv="Content-Language" content="vi" />
     <style type="text/css">
         *, ::after, ::before {
             box-sizing: border-box;
@@ -20,13 +19,13 @@
             color: #212529;
             text-align: left;
             background-color: transparent;
-
         }
 
         html, body {
             height: 100%;
             width: 100%
         }
+
         #DOT {
             position: relative;
             display: inline-block
@@ -52,245 +51,45 @@
             box-shadow: 0 0 3px 0 rgba(0,0,0,0.5);
             display: none
         }
-        .__ERR{
-            position:fixed;
-            bottom:0; left:0; right:0;  background-color:#fff; top:0; text-align:center;
-            padding:2rem; text-align:center;
-            font-size:1.5rem;
 
-        }
-        .center,.__ERR {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .center{
-            height:100%
-        }
-
-    </style>
-    <style>
-        #floatingBarsG {
-            position: relative;
-            width: 20px;
-            height: 25px;
-            margin: auto
-        }
-
-        .blockG {
-            position: absolute;
-            background-color: #fff;
-            width: 3px;
-            height: 8px;
-            border-radius: 3px 3px 0 0;
-            -o-border-radius: 3px 3px 0 0;
-            -ms-border-radius: 3px 3px 0 0;
-            -webkit-border-radius: 3px 3px 0 0;
-            -moz-border-radius: 3px 3px 0 0;
-            transform: scale(.4);
-            -o-transform: scale(.4);
-            -ms-transform: scale(.4);
-            -webkit-transform: scale(.4);
-            -moz-transform: scale(.4);
-            animation-name: fadeG;
-            -o-animation-name: fadeG;
-            -ms-animation-name: fadeG;
-            -webkit-animation-name: fadeG;
-            -moz-animation-name: fadeG;
-            animation-duration: 1.2s;
-            -o-animation-duration: 1.2s;
-            -ms-animation-duration: 1.2s;
-            -webkit-animation-duration: 1.2s;
-            -moz-animation-duration: 1.2s;
-            animation-iteration-count: infinite;
-            -o-animation-iteration-count: infinite;
-            -ms-animation-iteration-count: infinite;
-            -webkit-animation-iteration-count: infinite;
-            -moz-animation-iteration-count: infinite;
-            animation-direction: normal;
-            -o-animation-direction: normal;
-            -ms-animation-direction: normal;
-            -webkit-animation-direction: normal;
-            -moz-animation-direction: normal
-        }
-
-        #rotateG_01 {
-            left: 0;
-            top: 9px;
-            animation-delay: .45s;
-            -o-animation-delay: .45s;
-            -ms-animation-delay: .45s;
-            -webkit-animation-delay: .45s;
-            -moz-animation-delay: .45s;
-            transform: rotate(-90deg);
-            -o-transform: rotate(-90deg);
-            -ms-transform: rotate(-90deg);
-            -webkit-transform: rotate(-90deg);
-            -moz-transform: rotate(-90deg)
-        }
-
-        #rotateG_02 {
-            left: 3px;
-            top: 3px;
-            animation-delay: .6s;
-            -o-animation-delay: .6s;
-            -ms-animation-delay: .6s;
-            -webkit-animation-delay: .6s;
-            -moz-animation-delay: .6s;
-            transform: rotate(-45deg);
-            -o-transform: rotate(-45deg);
-            -ms-transform: rotate(-45deg);
-            -webkit-transform: rotate(-45deg);
-            -moz-transform: rotate(-45deg)
-        }
-
-        #rotateG_03 {
-            left: 8px;
-            top: 1px;
-            animation-delay: .75s;
-            -o-animation-delay: .75s;
-            -ms-animation-delay: .75s;
-            -webkit-animation-delay: .75s;
-            -moz-animation-delay: .75s;
-            transform: rotate(0);
-            -o-transform: rotate(0);
-            -ms-transform: rotate(0);
-            -webkit-transform: rotate(0);
-            -moz-transform: rotate(0)
-        }
-
-        #rotateG_04 {
-            right: 3px;
-            top: 3px;
-            animation-delay: .9s;
-            -o-animation-delay: .9s;
-            -ms-animation-delay: .9s;
-            -webkit-animation-delay: .9s;
-            -moz-animation-delay: .9s;
-            transform: rotate(45deg);
-            -o-transform: rotate(45deg);
-            -ms-transform: rotate(45deg);
-            -webkit-transform: rotate(45deg);
-            -moz-transform: rotate(45deg)
-        }
-
-        #rotateG_05 {
-            right: 0;
-            top: 9px;
-            animation-delay: 1.05s;
-            -o-animation-delay: 1.05s;
-            -ms-animation-delay: 1.05s;
-            -webkit-animation-delay: 1.05s;
-            -moz-animation-delay: 1.05s;
-            transform: rotate(90deg);
-            -o-transform: rotate(90deg);
-            -ms-transform: rotate(90deg);
-            -webkit-transform: rotate(90deg);
-            -moz-transform: rotate(90deg)
-        }
-
-        #rotateG_06 {
-            right: 3px;
-            bottom: 2px;
-            animation-delay: 1.2s;
-            -o-animation-delay: 1.2s;
-            -ms-animation-delay: 1.2s;
-            -webkit-animation-delay: 1.2s;
-            -moz-animation-delay: 1.2s;
-            transform: rotate(135deg);
-            -o-transform: rotate(135deg);
-            -ms-transform: rotate(135deg);
-            -webkit-transform: rotate(135deg);
-            -moz-transform: rotate(135deg)
-        }
-
-        #rotateG_07 {
+        .__LOAER {
+            position: fixed;
             bottom: 0;
-            left: 8px;
-            animation-delay: 1.35s;
-            -o-animation-delay: 1.35s;
-            -ms-animation-delay: 1.35s;
-            -webkit-animation-delay: 1.35s;
-            -moz-animation-delay: 1.35s;
-            transform: rotate(180deg);
-            -o-transform: rotate(180deg);
-            -ms-transform: rotate(180deg);
-            -webkit-transform: rotate(180deg);
-            -moz-transform: rotate(180deg)
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            top: 0;
+            text-align: center;
+            z-index: 999999;
+            text-align:center
         }
 
-        #rotateG_08 {
-            left: 3px;
-            bottom: 2px;
-            animation-delay: 1.5s;
-            -o-animation-delay: 1.5s;
-            -ms-animation-delay: 1.5s;
-            -webkit-animation-delay: 1.5s;
-            -moz-animation-delay: 1.5s;
-            transform: rotate(-135deg);
-            -o-transform: rotate(-135deg);
-            -ms-transform: rotate(-135deg);
-            -webkit-transform: rotate(-135deg);
-            -moz-transform: rotate(-135deg)
-        }
-
-        @keyframes fadeG {
-            0% {
-                background-color: #000
+            .__LOAER[data-loading-text=""]:after {
+                display: none
             }
 
-            100% {
-                background-color: #fff
-            }
-        }
-
-        @-o-keyframes fadeG {
-            0% {
-                background-color: #000
-            }
-
-            100% {
-                background-color: #fff
-            }
-        }
-
-        @-ms-keyframes fadeG {
-            0% {
-                background-color: #000
+            .__LOAER[data-loading-text]:after {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                padding: 30px 0;
+                background: #fff;
+                content: attr(data-loading-text);
+                padding: 10px 0;
+                z-index: 1;
             }
 
-            100% {
-                background-color: #fff
-            }
-        }
-
-        @-webkit-keyframes fadeG {
-            0% {
-                background-color: #000
+            .__LOAER svg {
+                opacity: 0.3
             }
 
-            100% {
-                background-color: #fff
+            .__LOAER:not(.shown) {
+                visibility: hidden
             }
-        }
-
-        @-moz-keyframes fadeG {
-            0% {
-                background-color: #000
+            .__LOAER{
+                display:block !important
             }
-
-            100% {
-                background-color: #fff
-            }
-        }
-
-        .__LOAER:not(.shown), .__ERR:not(.shown) {
-            visibility: hidden
-        }
-        .__LOAER{
-            background-color:#fff;
-            z-index:999999
-        }
     </style>
     <script>
         /**
@@ -312,20 +111,8 @@
     </script>
 </head>
 <body>
-<div class="center">
-    <div id="floatingBarsG" class="__LOAER">
-        <div class="blockG" id="rotateG_01"></div>
-        <div class="blockG" id="rotateG_02"></div>
-        <div class="blockG" id="rotateG_03"></div>
-        <div class="blockG" id="rotateG_04"></div>
-        <div class="blockG" id="rotateG_05"></div>
-        <div class="blockG" id="rotateG_06"></div>
-        <div class="blockG" id="rotateG_07"></div>
-        <div class="blockG" id="rotateG_08"></div>
-    </div>
-</div>
-<div class="__ERR">
-    disconnected! try again...
+<div class="__LOAER" data-loading-text="" style="display:none">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin:auto;background:#ffffff;display:block;z-index:1;position:relative;/* display: none; */" width="1920" height="969" preserveAspectRatio="xMidYMid" viewBox="0 0 1920 969"> <g transform=""><path id="path0" d="M 535.5125508787818 470.9497552588212 c 0 35.83298209079389 -8.76764455413042 10.292452302674842 -19.060096856805263 10.292452302674842 S 497.3923571651713 506.7827373496151 497.3923571651713 470.9497552588212 s 8.76764455413042 -10.292452302674842 19.060096856805263 -10.292452302674842 S 535.5125508787818 435.1167731680273 535.5125508787818 470.9497552588212 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="6.596962270296807" fill="#51cacc"> <animateMotion begin="-8.486658192407546s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path0"></mpath> </animateMotion> </circle><path id="path1" d="M 948.0681121588665 904.8924003444776 c 0 36.273770066038765 -8.875496931052037 10.419061614713263 -19.2945585457653 10.419061614713263 S 909.4789950673359 941.1661704105163 909.4789950673359 904.8924003444776 s 8.875496931052037 -10.419061614713263 19.2945585457653 -10.419061614713263 S 948.0681121588665 868.6186302784388 948.0681121588665 904.8924003444776 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="4.426908900946569" fill="#e0ff77"> <animateMotion begin="-2.700925836758501s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path1"></mpath> </animateMotion> </circle><path id="path2" d="M 168.66805383590585 489.15648240612256 c 0 37.2744190914626 -9.120336586208934 10.706482079462662 -19.826818665671595 10.706482079462662 S 129.01441650456266 526.4309014975852 129.01441650456266 489.15648240612256 s 9.120336586208934 -10.706482079462662 19.826818665671595 -10.706482079462662 S 168.66805383590585 451.88206331465994 168.66805383590585 489.15648240612256 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="4.826390566265425" fill="#51cacc"> <animateMotion begin="-1.7697712743487215s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path2"></mpath> </animateMotion> </circle><path id="path3" d="M 1707.4394935017522 616.4560814335207 c 0 29.38177480377736 -7.189157664754034 8.439445954276476 -15.62860361903051 8.439445954276476 S 1676.1822862636914 645.8378562372981 1676.1822862636914 616.4560814335207 s 7.189157664754034 -8.439445954276476 15.62860361903051 -8.439445954276476 S 1707.4394935017522 587.0743066297433 1707.4394935017522 616.4560814335207 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="5.8608783147432995" fill="#ff708e"> <animateMotion begin="-5.797043838590916s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path3"></mpath> </animateMotion> </circle><path id="path4" d="M 1288.5299815962996 494.5538994494055 c 0 32.95834198435218 -8.064275166384043 9.466757804016051 -17.531032970400094 9.466757804016051 S 1253.4679156554996 527.5122414337577 1253.4679156554996 494.5538994494055 s 8.064275166384043 -9.466757804016051 17.531032970400094 -9.466757804016051 S 1288.5299815962996 461.59555746505333 1288.5299815962996 494.5538994494055 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="4.455727290408933" fill="#e0ff77"> <animateMotion begin="-1.1949267497699556s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path4"></mpath> </animateMotion> </circle><path id="path5" d="M 1164.9517293365125 381.22941221230474 c 0 26.207462149913287 -6.412464143063889 7.527675298379349 -13.940139441443238 7.527675298379349 S 1137.0714504536259 407.436874362218 1137.0714504536259 381.22941221230474 s 6.412464143063889 -7.527675298379349 13.940139441443238 -7.527675298379349 S 1164.9517293365125 355.02195006239145 1164.9517293365125 381.22941221230474 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="5.06535341797491" fill="#ff708e"> <animateMotion begin="-0.6013666958220854s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path5"></mpath> </animateMotion> </circle><path id="path6" d="M 248.72872628071198 654.5665553201408 c 0 24.630449155893473 -6.0265992615484025 7.074703480948125 -13.101302742496529 7.074703480948125 S 222.52612079571892 679.1970044760342 222.52612079571892 654.5665553201408 s 6.0265992615484025 -7.074703480948125 13.101302742496529 -7.074703480948125 S 248.72872628071198 629.9361061642473 248.72872628071198 654.5665553201408 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="5.607784240758047" fill="#9df871"> <animateMotion begin="-2.3230034524308585s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path6"></mpath> </animateMotion> </circle><path id="path7" d="M 1570.9577606439045 931.9101992975231 c 0 21.85603948885783 -5.347754343018405 6.277798576586824 -11.625552919605228 6.277798576586824 S 1547.706654804694 953.766238786381 1547.706654804694 931.9101992975231 s 5.347754343018405 -6.277798576586824 11.625552919605228 -6.277798576586824 S 1570.9577606439045 910.0541598086653 1570.9577606439045 931.9101992975231 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="7.545411864552793" fill="#e0ff77"> <animateMotion begin="-8.092144614525182s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path7"></mpath> </animateMotion> </circle><path id="path8" d="M 1918.582436590844 582.4786260596112 c 0 23.60249733159656 -5.775079134326817 6.779440722905394 -12.554519857232211 6.779440722905394 S 1893.4733968763796 606.0811233912077 1893.4733968763796 582.4786260596112 s 5.775079134326817 -6.779440722905394 12.554519857232211 -6.779440722905394 S 1918.582436590844 558.8761287280147 1918.582436590844 582.4786260596112 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="6.20592253914595" fill="#51cacc"> <animateMotion begin="-7.830091327174136s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path8"></mpath> </animateMotion> </circle><path id="path9" d="M 1632.155672114324 443.4994027253324 c 0 20.597184207210724 -5.039736561338794 5.916212485049889 -10.955949046388682 5.916212485049889 S 1610.2437740215466 464.0965869325431 1610.2437740215466 443.4994027253324 s 5.039736561338794 -5.916212485049889 10.955949046388682 -5.916212485049889 S 1632.155672114324 422.9022185181217 1632.155672114324 443.4994027253324 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="4.125464592623818" fill="#ff708e"> <animateMotion begin="-8.331072893338122s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path9"></mpath> </animateMotion> </circle><path id="path10" d="M 28.902602458805198 367.7611732776694 c 0 33.61112994172957 -8.223999879359363 9.654260727943601 -17.878260607302966 9.654260727943601 S -6.853918755800736 401.372303219399 -6.853918755800736 367.7611732776694 s 8.223999879359363 -9.654260727943601 17.878260607302966 -9.654260727943601 S 28.902602458805198 334.1500433359398 28.902602458805198 367.7611732776694 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="6.075710056508051" fill="#9df871"> <animateMotion begin="-0.5488698854013307s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path10"></mpath> </animateMotion> </circle><path id="path11" d="M 790.2919418206635 856.778242316892 c 0 32.997635162230736 -8.07388945458837 9.47804414234287 -17.551933596931242 9.47804414234287 S 755.188074626801 889.7758774791228 755.188074626801 856.778242316892 s 8.07388945458837 -9.47804414234287 17.551933596931242 -9.47804414234287 S 790.2919418206635 823.7806071546613 790.2919418206635 856.778242316892 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="7.051665005211075" fill="#ff708e"> <animateMotion begin="-1.3871760972754754s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path11"></mpath> </animateMotion> </circle><path id="path12" d="M 459.66589015787736 227.92184824245373 c 0 25.46487964050659 -6.230768422677144 7.314380322273171 -13.545148744950314 7.314380322273171 S 432.5755926679767 253.38672788296032 432.5755926679767 227.92184824245373 s 6.230768422677144 -7.314380322273171 13.545148744950314 -7.314380322273171 S 459.66589015787736 202.45696860194715 459.66589015787736 227.92184824245373 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="6.179945303144435" fill="#de9dd6"> <animateMotion begin="-6.905930864558818s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path12"></mpath> </animateMotion> </circle><path id="path13" d="M 240.04464739531272 526.8734329551139 c 0 36.15606723319613 -8.846697301739479 10.38525335421591 -19.23195065595539 10.38525335421591 S 201.58074608340195 563.0295001883101 201.58074608340195 526.8734329551139 s 8.846697301739479 -10.38525335421591 19.23195065595539 -10.38525335421591 S 240.04464739531272 490.71736572191776 240.04464739531272 526.8734329551139 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="7.346121387784964" fill="#e0ff77"> <animateMotion begin="-0.04210899992907802s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path13"></mpath> </animateMotion> </circle><path id="path14" d="M 958.2634082511147 427.36590567332644 c 0 35.714010854470914 -8.738534570774798 10.258279713518242 -18.99681428429304 10.258279713518242 S 920.2697796825287 463.07991652779737 920.2697796825287 427.36590567332644 s 8.738534570774798 -10.258279713518242 18.99681428429304 -10.258279713518242 S 958.2634082511147 391.6518948188555 958.2634082511147 427.36590567332644 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="4.511045759315624" fill="#ff708e"> <animateMotion begin="-9.32224260347099s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path14"></mpath> </animateMotion> </circle><path id="path15" d="M 1905.1202015198603 223.78550012213253 c 0 35.670455662605995 -8.72787744936104 10.245769179684702 -18.973646629045742 10.245769179684702 S 1867.1729082617687 259.45595578473853 1867.1729082617687 223.78550012213253 s 8.72787744936104 -10.245769179684702 18.973646629045742 -10.245769179684702 S 1905.1202015198603 188.11504445952653 1905.1202015198603 223.78550012213253 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="4.584695861176486" fill="#de9dd6"> <animateMotion begin="-2.1289014076502166s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path15"></mpath> </animateMotion> </circle><path id="path16" d="M 313.68579798410724 908.3229152341671 c 0 31.7674796832842 -7.772893965058898 9.1247016111561 -16.897595576215 9.1247016111561 S 279.89060683167725 940.0903949174514 279.89060683167725 908.3229152341671 s 7.772893965058898 -9.1247016111561 16.897595576215 -9.1247016111561 S 313.68579798410724 876.5554355508829 313.68579798410724 908.3229152341671 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="7.131477173337272" fill="#9df871"> <animateMotion begin="-4.871356095973942s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path16"></mpath> </animateMotion> </circle><path id="path17" d="M 140.5631025013459 852.2553391728201 c 0 24.222433887062788 -5.926765738323873 6.95750760585846 -12.884273344182333 6.95750760585846 S 114.79455581298123 876.4777730598829 114.79455581298123 852.2553391728201 s 5.926765738323873 -6.95750760585846 12.884273344182333 -6.95750760585846 S 140.5631025013459 828.0329052857572 140.5631025013459 852.2553391728201 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="4.453802545938078" fill="#e0ff77"> <animateMotion begin="-1.0010944827456592s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path17"></mpath> </animateMotion> </circle><path id="path18" d="M 326.21307804657306 959.9091394470752 c 0 22.97469505178799 -5.621467938203444 6.599114536151869 -12.220582474355313 6.599114536151869 S 301.77191309786247 982.8838344988632 301.77191309786247 959.9091394470752 s 5.621467938203444 -6.599114536151869 12.220582474355313 -6.599114536151869 S 326.21307804657306 936.9344443952872 326.21307804657306 959.9091394470752 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="4.871934872364771" fill="#51cacc"> <animateMotion begin="-6.514432958619409s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path18"></mpath> </animateMotion> </circle><path id="path19" d="M 195.7357097015035 282.33456794548783 c 0 36.504029349067174 -8.931836968388774 10.485199919412912 -19.417036887801686 10.485199919412912 S 156.90163592590014 318.83859729455503 156.90163592590014 282.33456794548783 s 8.931836968388774 -10.485199919412912 19.417036887801686 -10.485199919412912 S 195.7357097015035 245.83053859642067 195.7357097015035 282.33456794548783 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="6.9087360122466155" fill="#9df871"> <animateMotion begin="-6.433410624169548s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path19"></mpath> </animateMotion> </circle><path id="path20" d="M 1356.7407449535488 634.3244565729353 c 0 25.22172945035916 -6.171274227215539 7.244539310209547 -13.415813537425086 7.244539310209547 S 1329.9091178786987 659.5461860232945 1329.9091178786987 634.3244565729353 s 6.171274227215539 -7.244539310209547 13.415813537425086 -7.244539310209547 S 1356.7407449535488 609.1027271225762 1356.7407449535488 634.3244565729353 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="4.598650265566457" fill="#51cacc"> <animateMotion begin="-3.9258580663174447s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path20"></mpath> </animateMotion> </circle><path id="path21" d="M 1614.4847414087578 467.7380835141509 c 0 21.30036576078905 -5.211791622320724 6.118190165333025 -11.329981787653749 6.118190165333025 S 1591.8247778334505 489.0384492749399 1591.8247778334505 467.7380835141509 s 5.211791622320724 -6.118190165333025 11.329981787653749 -6.118190165333025 S 1614.4847414087578 446.4377177533619 1614.4847414087578 467.7380835141509 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="7.722437666986459" fill="#9df871"> <animateMotion begin="-9.775627488412708s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path21"></mpath> </animateMotion> </circle><path id="path22" d="M 845.1968200944929 413.2957284897037 c 0 26.273506120710845 -6.42862383804627 7.546645375097796 -13.975269213144067 7.546645375097796 S 817.2462816682047 439.5692346104146 817.2462816682047 413.2957284897037 s 6.42862383804627 -7.546645375097796 13.975269213144067 -7.546645375097796 S 845.1968200944929 387.02222236899286 845.1968200944929 413.2957284897037 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="7.759249502404988" fill="#de9dd6"> <animateMotion begin="-4.7636896168519165s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path22"></mpath> </animateMotion> </circle><path id="path23" d="M 779.4548798243015 349.82400214117365 c 0 25.446309313437254 -6.2262246192452855 7.309046292157509 -13.535270911402794 7.309046292157509 S 752.384338001496 375.2703114546109 752.384338001496 349.82400214117365 s 6.2262246192452855 -7.309046292157509 13.535270911402794 -7.309046292157509 S 779.4548798243015 324.3776928277364 779.4548798243015 349.82400214117365 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="4.51144879009629" fill="#51cacc"> <animateMotion begin="-2.680237882465488s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path23"></mpath> </animateMotion> </circle><path id="path24" d="M 1906.406664341478 183.10674362187734 c 0 35.187359604215835 -8.609673094648555 10.107007545891783 -18.71668064054034 10.107007545891783 S 1868.9733030603975 218.29410322609317 1868.9733030603975 183.10674362187734 s 8.609673094648555 -10.107007545891783 18.71668064054034 -10.107007545891783 S 1906.406664341478 147.9193840176615 1906.406664341478 183.10674362187734 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="7.18081790272091" fill="#ff708e"> <animateMotion begin="-5.288861192964558s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path24"></mpath> </animateMotion> </circle><path id="path25" d="M 416.0428499693285 485.9240120765794 c 0 37.34124811115562 -9.136688367623183 10.725677648948956 -19.86236601657214 10.725677648948956 S 376.3181179361842 523.2652601877351 376.3181179361842 485.9240120765794 s 9.136688367623183 -10.725677648948956 19.86236601657214 -10.725677648948956 S 416.0428499693285 448.5827639654238 416.0428499693285 485.9240120765794 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="5.106457449024489" fill="#ff708e"> <animateMotion begin="-2.218520104767059s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path25"></mpath> </animateMotion> </circle><path id="path26" d="M 1427.5966047634806 754.3119920136069 c 0 23.673234218861918 -5.792387096104511 6.799758764992253 -12.592145861096764 6.799758764992253 S 1402.4123130412872 777.9852262324688 1402.4123130412872 754.3119920136069 s 5.792387096104511 -6.799758764992253 12.592145861096764 -6.799758764992253 S 1427.5966047634806 730.638757794745 1427.5966047634806 754.3119920136069 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="4.0692882607264425" fill="#e0ff77"> <animateMotion begin="-7.214293198810697s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path26"></mpath> </animateMotion> </circle><path id="path27" d="M 1827.2026064266936 107.02650621848109 c 0 20.13225982656441 -4.925978468201929 5.782670375715309 -10.708648843917238 5.782670375715309 S 1805.7853087388592 127.1587660450455 1805.7853087388592 107.02650621848109 s 4.925978468201929 -5.782670375715309 10.708648843917238 -5.782670375715309 S 1827.2026064266936 86.89424639191668 1827.2026064266936 107.02650621848109 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="5.685385405180043" fill="#51cacc"> <animateMotion begin="-5.255870146117627s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path27"></mpath> </animateMotion> </circle><path id="path28" d="M 897.7294819714516 242.68384255617994 c 0 34.62969822167923 -8.473224032964064 9.94682821260999 -18.420052245574055 9.94682821260999 S 860.8893774803034 277.31354077785915 860.8893774803034 242.68384255617994 s 8.473224032964064 -9.94682821260999 18.420052245574055 -9.94682821260999 S 897.7294819714516 208.0541443345007 897.7294819714516 242.68384255617994 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="5.3811575818885915" fill="#51cacc"> <animateMotion begin="-0.36692650608542987s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path28"></mpath> </animateMotion> </circle><path id="path29" d="M 1879.8503489925324 701.4582884887158 c 0 30.81767290838639 -7.540494435030711 8.851884771557792 -16.392379206588505 8.851884771557792 S 1847.0655905793556 732.2759613971022 1847.0655905793556 701.4582884887158 s 7.540494435030711 -8.851884771557792 16.392379206588505 -8.851884771557792 S 1879.8503489925324 670.6406155803294 1879.8503489925324 701.4582884887158 z" fill="none" stroke="none"></path> <circle cx="0" cy="0" r="4.65970081109001" fill="#de9dd6"> <animateMotion begin="-3.2739604404851774s" dur="10s" repeatCount="indefinite"> <mpath xlink:href="#path29"></mpath> </animateMotion> </circle></g> </svg>
 </div>
 
 <script type="text/javascript">
@@ -382,7 +169,7 @@
 
         }
 
-        var __ERR = document.querySelector('.__ERR');
+
         var __LOAER = document.querySelector('.__LOAER');
 
         function box(fn) {
@@ -421,31 +208,65 @@
         box(() => {
 
             var link = '/app/index21.aspx';
+            var N = 5;
+            var isShowLoader = false;
+            var showLoaderInv = setTimeout(function () {
+                isShowLoader = true;
+                __LOAER.classList.add("shown");
+            }, 1000);
 
+            function countDown() {
+                __LOAER.setAttribute("data-loading-text", "disconnected! try again after(" + N + 's)');
+                if (N == 0) {
+                    get();
+                } else {
+                    setTimeout(function () {
+
+                        N = N - 1;
+                        countDown();
+                    }, 1000);
+                }
+            }
+            function init(script) {
+                clearTimeout(showLoaderInv);
+                if (!isShowLoader) {
+                    __embedJs(script);
+                    __LOAER.remove();
+                } else {
+                    //để trách nhấp nháy
+                    setTimeout(function () {
+                        __embedJs(script);
+                        __LOAER.remove();
+                    }, 1000)
+                }
+
+
+            }
             function err() {
                 var script = localStorage.getItem(SCRIPT_INDEX);
                 if (script) {
-                    __embedJs(script);
+                    init(script);
                 } else {
                     setTimeout(function () {
-                        __ERR.classList.add('shown');
-                        __LOAER.classList.remove('shown');
+
+                        __LOAER.setAttribute("data-loading-text", "disconnected! try again...");
+                        N = 5;
+                        countDown();
+
                     }, 1000);
                 }
             }
 
             function get() {
-                __ERR.classList.remove('shown');
-                __LOAER.classList.add('shown');
+
+                __LOAER.setAttribute("data-loading-text", "connecting...");
                 fetch(link)
                     .then((data) => {
 
                         if (data.status === 200) {
                             data.text().then(function (script) {
                                 localStorage.setItem(SCRIPT_INDEX, script);
-                                __ERR.remove();
-                                __LOAER.remove();
-                                __embedJs(script);
+                                init(script);
                             })
                         } else err();
 
@@ -454,12 +275,11 @@
                     });
             }
 
-            __ERR.addEventListener('click', get)
+
             get();
 
         });
 
-
-</script>
+    </script>
 </body>
 </html>

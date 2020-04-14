@@ -602,7 +602,7 @@ public class App21 {
                 Result rs = result.copy();
                 rs.success = true;
                 MainActivity m = (MainActivity) mContext;
-                m.wvVisibility(rs.params == "1");
+                m.wvVisibility(rs.params.equals("1"));
                 App21Result(rs);
             }
         }).run();
