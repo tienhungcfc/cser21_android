@@ -12,6 +12,7 @@ import android.support.annotation.RequiresApi;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -231,7 +232,7 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
     public String toBase64(String localPath){
 
         try{
-            File file = new File(localPath);
+            File file = getFile(localPath);
             InputStream finput = new FileInputStream(file);
             byte[] fileBytes = new byte[(int)file.length()];
             finput.read(fileBytes, 0, fileBytes.length);
@@ -244,6 +245,17 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
         }catch (Exception ex){
             return  null;
         }
+    }
+
+    public String GET_TEXT(String localPath) throws IOException {
+        File file = getFile(localPath);
+        InputStream finput = new FileInputStream(file);
+        byte[] fileBytes = new byte[(int) file.length()];
+        finput.read(fileBytes, 0, fileBytes.length);
+        finput.close();
+
+        String str = new String(fileBytes, "UTF-8");
+        return str;
     }
 
     public static  String tryDecodeUrl(String input){

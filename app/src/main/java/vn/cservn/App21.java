@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -231,6 +232,7 @@ public class App21 {
     }
 
     void BASE64(final Result result) {
+        final App21 t = this;
         new Runnable() {
             @Override
             public void run() {
@@ -240,6 +242,7 @@ public class App21 {
                 Base64Require rq = new Gson().fromJson(rs.params, Base64Require.class);
                 MainActivity m = (MainActivity) mContext;
                 DownloadFilesTask downloadFilesTask = new DownloadFilesTask();
+                downloadFilesTask.app21 = t;
                 String base64 = downloadFilesTask.toBase64(rq.path);
                 m.evalJs("" + rq.callback + "('" + base64 + "')");
             }
@@ -606,6 +609,24 @@ public class App21 {
                 App21Result(rs);
             }
         }).run();
+
+
+    }
+
+    void GET_TEXT(final Result result) {
+        Result rs = result.copy();
+        try {
+
+            rs.success = true;
+            DownloadFilesTask downloadFilesTask = new DownloadFilesTask();
+            downloadFilesTask.app21 = this;
+            rs.data = downloadFilesTask.GET_TEXT(result.params);
+
+        } catch (Exception ex) {
+            rs.success = false;
+            rs.error = ex.getLocalizedMessage();
+        }
+        App21Result(rs);
 
 
     }
