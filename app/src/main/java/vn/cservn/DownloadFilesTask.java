@@ -2,13 +2,18 @@ package vn.cservn;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Files;
@@ -279,7 +285,70 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
         return file.getAbsolutePath();
     }
 
+    public  String saveUri(Uri sourceuri, String suffix)
+    {
+        String sourceFilename= sourceuri.getPath();
+        String destinationFilename = filenameFrom(suffix);
 
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+
+        try {
+            bis = new BufferedInputStream(new FileInputStream(sourceuri.toString()));
+            bos = new BufferedOutputStream(new FileOutputStream(destinationFilename, false));
+            byte[] buf = new byte[1024];
+            bis.read(buf);
+            do {
+                bos.write(buf);
+            } while(bis.read(buf) != -1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bis != null) bis.close();
+                if (bos != null) bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return  destinationFilename;
+    }
+     String saveVideoFileOnActivityResult(Intent videoIntent, String suff){
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        File file = null;
+        String rs ="";
+        try {
+            rs = filenameFrom(suff);
+            file = new File(rs);
+            AssetFileDescriptor videoAsset = app21.mContext.getContentResolver().openAssetFileDescriptor(videoIntent.getData(), "r");
+            fis = videoAsset.createInputStream();
+            //File videoFile = new File(Environment.getExternalStorageDirectory(),"<VideoFileName>.mp4");
+            fos = new FileOutputStream(file);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fis.read(buffer)) > 0) {
+                fos.write(buffer, 0, length);
+            }
+            //fis.close();
+            //fos.close();
+        } catch (IOException e) {
+            // TODO: handle error
+            e.printStackTrace();
+        }finally{
+            try {
+                if(fis!=null)
+                    fis.close();
+                if(fos!=null)
+                    fos.close();
+            } catch (Exception e2) {
+                // TODO: handle exception
+                e2.printStackTrace();
+            }
+        }
+        return rs;
+    }
     class FileInfo {
 
         public String name;

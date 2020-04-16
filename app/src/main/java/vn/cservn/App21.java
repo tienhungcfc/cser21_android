@@ -10,10 +10,12 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
@@ -27,6 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -643,6 +646,79 @@ public class App21 {
                     MainActivity m = (MainActivity) mContext;
                     final Result rs = result.copy();
                     m.record21.RecordAudio(rs, t);
+                }
+            });
+
+
+        } catch (Exception ex) {
+            result.success = false;
+            result.error = ex.getLocalizedMessage();
+            App21Result(result);
+        }
+
+    }
+
+    void RECORD_VIDEO(final Result result) {
+
+        final App21 t = this;
+        try {
+
+            String _RECORD_VIDEO = Manifest.permission.CAMERA;
+            _PERMISSION(result, _RECORD_VIDEO, new Runnable() {
+                @Override
+                public void run() {
+                    Async21.run(0, new Runnable() {
+                        @Override
+                        public void run() {
+                            final MainActivity m = (MainActivity) mContext;
+
+
+
+
+
+                            Intent cInt = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+                            cInt.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                            cInt.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3000);
+
+
+                            if (cInt.resolveActivity(m.getPackageManager()) == null) {
+                                Result rs = result.copy();
+                                rs.success = false;
+                                rs.error = "resolveActivity()==null";
+                                App21Result(rs);
+                                return;
+                            }
+
+
+                            IsMe = true;
+                            m.startActivityForResult(cInt, activityResultIDManager.put(new ActivityResultID() {
+                                @Override
+                                public void run() {
+                                    if (this.resultCode == Activity.RESULT_OK) {
+                                        Result rs = result.copy();
+                                        try {
+
+                                            DownloadFilesTask downloadFilesTask = new DownloadFilesTask();
+                                            downloadFilesTask.app21 = t;
+
+                                            rs.success = true;
+                                            rs.data = downloadFilesTask.saveVideoFileOnActivityResult(this.intent, "RECORD_VIDEO.mp4");
+                                            App21Result(rs);
+                                        } catch (NullPointerException n) {
+                                            rs.success = false;
+                                            rs.error = n.getLocalizedMessage();
+                                        }
+                                    } else if (resultCode == Activity.RESULT_CANCELED) {
+                                        Result rs = result.copy();
+                                        rs.success = false;
+                                        rs.error = "resultCode=" + resultCode;
+                                        App21Result(rs);
+                                    }
+                                }
+                            }), cInt.getExtras());
+                        }
+                    });
                 }
             });
 
