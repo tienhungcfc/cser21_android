@@ -3,6 +3,8 @@ package vn.cservn;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 
 public class Record21 {
@@ -21,28 +23,43 @@ public class Record21 {
         }
     }
 
+    private void success(Object obj){
+        if (result != null && app21 != null) {
+            result.success = true;
+            result.data = obj;
+            app21.App21Result(result);
+        }
+    }
+
     public void RecordAudio(Result result, App21 app21) {
         this.result = result;
         this.app21 = app21;
 
-        switch (result.params) {
+        RecordInfo recordInfo = new Gson().fromJson(result.params, RecordInfo.class);
+
+        switch (recordInfo.action) {
             case "record":
                 DownloadFilesTask downloadFilesTask = new DownloadFilesTask();
                 downloadFilesTask.app21 = app21;
                 recordFilename = downloadFilesTask.filenameFrom("RECORD_AUDIO.mp3");
                 startRecording();
+                success(null);
                 break;
             case "record_stop":
+                success(recordFilename);
                 stopRecording();
+                recordFilename = null;
             case "play":
-                startPlaying(result.params);
+                startPlaying(recordInfo.filename);
+                success(null);
                 break;
             case "play_stop":
+                success(null);
+                recordFilename = null;
                 stopPlaying();
         }
-
-
     }
+
 
     private void startPlaying(String fileName) {
         player = new MediaPlayer();
@@ -88,10 +105,7 @@ public class Record21 {
         recorder.release();
         recorder = null;
 
-        if (result != null && app21 != null) {
-            result.data = recordFilename;
-            app21.App21Result(result);
-        }
+
 
     }
 
@@ -106,4 +120,9 @@ public class Record21 {
             player = null;
         }
     }
+}
+
+class RecordInfo{
+    String action;
+    String filename;
 }

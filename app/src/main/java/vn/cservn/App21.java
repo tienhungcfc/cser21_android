@@ -636,17 +636,13 @@ public class App21 {
         final App21 t = this;
         try {
 
-            _PERMISSION(result, "WRITE_EXTERNAL_STORAGE", new Runnable() {
+            String _RECORD_AUDIO = Manifest.permission.RECORD_AUDIO;
+            _PERMISSION(result, _RECORD_AUDIO, new Runnable() {
                 @Override
                 public void run() {
-                    _PERMISSION(result, "RECORD_AUDIO", new Runnable() {
-                        @Override
-                        public void run() {
-                            MainActivity m = (MainActivity) mContext;
-                            final Result rs = result.copy();
-                            m.record21.RecordAudio(rs, t);
-                        }
-                    });
+                    MainActivity m = (MainActivity) mContext;
+                    final Result rs = result.copy();
+                    m.record21.RecordAudio(rs, t);
                 }
             });
 
