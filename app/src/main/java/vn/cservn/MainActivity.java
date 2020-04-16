@@ -366,6 +366,14 @@ public class MainActivity extends AppCompatActivity {
         evalJs("AppPause()");
     }
 
+    Record21 record21 = new Record21();
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        record21.release();
+    }
+
     String getAssetString(String name) {
         String str = "";
         try {

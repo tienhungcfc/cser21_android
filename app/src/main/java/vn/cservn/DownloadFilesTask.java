@@ -268,6 +268,18 @@ public class DownloadFilesTask extends AsyncTask<String, String, String> {
         }
     }
 
+    public String filenameFrom(String suffix) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
+        Date date = new Date();
+        String fname = formatter.format(date) + "-" + suffix;
+        ContextWrapper cw = new ContextWrapper(app21.mContext.getApplicationContext());
+        File directory = cw.getDir("profile", Context.MODE_PRIVATE);
+
+        File file = new File(directory, fname);
+        return file.getAbsolutePath();
+    }
+
+
     class FileInfo {
 
         public String name;

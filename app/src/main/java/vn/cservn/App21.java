@@ -628,6 +628,34 @@ public class App21 {
         }
         App21Result(rs);
 
+    }
+
+
+    void RECORD_AUDIO(final Result result) {
+
+        final App21 t = this;
+        try {
+
+            _PERMISSION(result, "WRITE_EXTERNAL_STORAGE", new Runnable() {
+                @Override
+                public void run() {
+                    _PERMISSION(result, "RECORD_AUDIO", new Runnable() {
+                        @Override
+                        public void run() {
+                            MainActivity m = (MainActivity) mContext;
+                            final Result rs = result.copy();
+                            m.record21.RecordAudio(rs, t);
+                        }
+                    });
+                }
+            });
+
+
+        } catch (Exception ex) {
+            result.success = false;
+            result.error = ex.getLocalizedMessage();
+            App21Result(result);
+        }
 
     }
 
