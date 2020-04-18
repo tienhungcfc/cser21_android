@@ -731,6 +731,24 @@ public class App21 {
 
     }
 
+    void BROWSER(final Result result) {
+
+        final App21 t = this;
+        try {
+
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(result.params));
+            mContext.startActivity(browserIntent);
+
+            result.success = true;
+
+        } catch (Exception ex) {
+            result.success = false;
+            result.error = ex.getLocalizedMessage();
+
+        }
+        App21Result(result);
+    }
+
     public boolean onActivityResult(int requestCode, int resultCode, Intent intent, Activity activity) {
         // Activity act = activity.getCallingActivity().;
 
