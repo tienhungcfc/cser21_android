@@ -1,16 +1,13 @@
-package vn.cservn;
+package vn.cser21;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class ImageUtil extends AsyncTask<Result, Result, Result> {
 

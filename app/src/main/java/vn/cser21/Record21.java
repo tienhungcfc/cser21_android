@@ -1,4 +1,4 @@
-package vn.cservn;
+package vn.cser21;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;

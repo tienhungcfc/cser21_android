@@ -1,4 +1,4 @@
-package vn.cservn;
+package vn.cser21;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
@@ -27,9 +26,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;

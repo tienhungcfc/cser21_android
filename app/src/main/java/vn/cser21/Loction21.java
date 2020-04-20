@@ -1,4 +1,4 @@
-package vn.cservn;
+package vn.cser21;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,7 +16,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;

@@ -1,4 +1,4 @@
-package vn.cservn;
+package vn.cser21;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -20,7 +20,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -40,26 +39,17 @@ import com.google.gson.Gson;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.WebView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import static android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
 
 /*
 Thay đổi cấu hình cho từng app

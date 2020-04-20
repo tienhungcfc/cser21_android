@@ -1,4 +1,4 @@
-package vn.cservn;
+package vn.cser21;
 
 import android.content.Context;
 import android.content.SharedPreferences;

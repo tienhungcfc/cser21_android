@@ -1,7 +1,5 @@
-package vn.cservn;
+package vn.cser21;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.Map;
 
 public class WebControl {

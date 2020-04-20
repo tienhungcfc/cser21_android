@@ -1,4 +1,4 @@
-package vn.cservn;
+package vn.cser21;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("vn.cservn", appContext.getPackageName());
+        assertEquals("vn.cservn21", appContext.getPackageName());
     }
 }

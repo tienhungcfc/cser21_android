@@ -1,4 +1,4 @@
-package vn.cservn;
+package vn.cser21;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -9,23 +9,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Files;

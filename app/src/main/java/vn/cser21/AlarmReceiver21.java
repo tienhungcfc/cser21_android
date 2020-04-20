@@ -1,9 +1,6 @@
-package vn.cservn;
+package vn.cser21;
 
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -11,25 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
-import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class AlarmReceiver21 extends BroadcastReceiver {
 

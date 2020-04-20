@@ -1,4 +1,4 @@
-package vn.cservn;
+package vn.cser21;
 
 import android.app.Application;
 import android.content.Context;

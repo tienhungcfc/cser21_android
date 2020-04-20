@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="vn.cservn">
+    package="vn.cser21">
 
     <!-- permission -->
     <application
-        android:name=".APP"
+        android:name="vn.cser21.APP"
         android:allowBackup="true"
         android:background="@android:color/black"
         android:debuggable="false"
@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="HardcodedDebugMode">
         <activity
-            android:name=".MainActivity"
+            android:name="vn.cser21.MainActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,24 +32,24 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="channel_id" /> <!-- @drawable/ic_stat_name: Ảnh PNG với nèn trong suốt -->
-        <service android:name=".MyFirebaseMessagingService">
+        <service android:name="vn.cser21.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".FirebaseIDService">
+        <service android:name="vn.cser21.FirebaseIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <receiver android:name=".BroadcastReceiver21"
+        <receiver android:name="vn.cser21.BroadcastReceiver21"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
 
             </intent-filter>
         </receiver>
-        <receiver android:process=":remote" android:name=".AlarmReceiver21"></receiver>
+        <receiver android:process=":remote" android:name="vn.cser21.AlarmReceiver21"></receiver>
     </application>
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.camera.flash" />
