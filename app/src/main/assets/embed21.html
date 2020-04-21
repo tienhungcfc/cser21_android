@@ -25,6 +25,7 @@
             height: 100%;
             width: 100%;
             background-color: transparent;
+            overflow:hidden
         }
 
         #DOT {
@@ -269,7 +270,7 @@
             function countDown() {
                 LOADER21.innerHTML = "disconnected! try again after(" + N + 's)';
                 document.body.setAttribute('data-status', 'COUNTDOWN');
- 
+
 
                 if (N == 0) {
                     COUNTDOWN(N);
