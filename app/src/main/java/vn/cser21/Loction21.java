@@ -41,6 +41,7 @@ public class Loction21 {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
     }
 
+
     @SuppressLint("MissingPermission")
     private void requestNewLocationData() {
 
@@ -132,4 +133,38 @@ public class Loction21 {
         );
     }
 
+    public void SendTo(final String urlReceiver) {
+        try {
+            mFusedLocationClient.getLastLocation().addOnCompleteListener(
+                    new OnCompleteListener<Location>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Location> task) {
+                            Location location = task.getResult();
+                            if (location != null) {
+                                String info = "";
+                                info += "lat:" + location.getLatitude();
+                                info += ",lng:" + location.getLongitude();
+                                Map<String, String> p = new HashMap<String, String>();
+                                p.put("ClientValue", info);
+                                String _url = WebControl.toUrlWithsParams(urlReceiver, p);
+                                new Fetch21().fetch(_url, new Callback21() {
+                                    @Override
+                                    public void ok() {
+                                        super.ok();
+                                    }
+
+                                    @Override
+                                    public void no() {
+                                        super.no();
+                                    }
+                                });
+
+                            }
+                        }
+                    }
+            );
+        }
+        catch (Exception ex) {
+        }
+    }
 }

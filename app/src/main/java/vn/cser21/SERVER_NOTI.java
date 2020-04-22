@@ -203,17 +203,39 @@ public class SERVER_NOTI {
                     byte[] bytes = IOUtils.toByteArray(in);
                     String str = new String(bytes, "UTF-8");
 
-                    Response rsp = new Gson().fromJson(str, Response.class);
-                    if (rsp != null && rsp.success) {
-                        if (rsp.data != null && rsp.data.notis != null) {
-                            for (Noti21 noti21 : rsp.data.notis) {
-                                noti(noti21, context);
+                    try{
+                        Response rsp = new Gson().fromJson(str, Response.class);
+                        if (rsp != null && rsp.success) {
+
+
+                            if(rsp.data != null){
+                                //noti
+                                if ( rsp.data.notis != null) {
+                                    for (Noti21 noti21 : rsp.data.notis) {
+                                        noti(noti21, context);
+                                    }
+                                }
+                                //detech_location
+                                if(rsp.data.detechLocation != null && rsp.data.detechLocation.enable){
+                                    new Loction21(context).SendTo(rsp.data.detechLocation.receiver);
+                                }
                             }
+
+
+                        }
+
+
+
+                        if (callback21 != null)
+                            callback21.ok();
+                    }catch (Exception ex){
+                        if (callback21 != null)
+                        {
+                            callback21.lastExp = ex;
+                            callback21.no();
                         }
                     }
 
-                    if (callback21 != null)
-                        callback21.ok();
 
                 } catch (NetworkOnMainThreadException netError) {
                     Log.i("NetThreadException:", step);
@@ -238,6 +260,7 @@ public class SERVER_NOTI {
 
     public class Data {
         List<Noti21> notis;
+        DetectLocation detechLocation;
     }
 
     class Response {
@@ -245,6 +268,10 @@ public class SERVER_NOTI {
         public Data data;
     }
 
+    class DetectLocation{
+        boolean enable;
+        String receiver;
+    }
 
 
 }

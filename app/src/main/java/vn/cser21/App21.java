@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -743,6 +744,19 @@ public class App21 {
             result.error = ex.getLocalizedMessage();
 
         }
+        App21Result(result);
+    }
+    void GET_INFO(final Result result){
+        final App21 t = this;
+        result.success = true;
+        String info = "Android";
+        info += ",PACKAGE_NAME:"+mContext.getPackageName();
+        info += ",SDK_INT:" + Build.VERSION.SDK_INT;
+        info += ",CODENAME:" + Build.VERSION.CODENAME;
+        info += ",MANUFACTURER:" + Build.MANUFACTURER;
+        info += ",PRODUCT:" + Build.PRODUCT;
+        info += ",MODEL:" + Build.MODEL;
+        result.data = info;
         App21Result(result);
     }
 
