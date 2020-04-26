@@ -573,6 +573,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        //only on debug
+        //https://developers.google.com/web/tools/chrome-devtools/remote-debugging/webviews
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
     }
 
     public class Callback extends WebViewClient {
