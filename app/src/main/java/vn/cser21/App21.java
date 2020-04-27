@@ -282,6 +282,8 @@ public class App21 {
                                     if (this.resultCode == Activity.RESULT_OK) {
                                         Result rs = result.copy();
                                         try {
+                                            //Data dataImage = this.intent.getExtras().get("data");
+
                                             Bitmap bp = (Bitmap) this.intent.getExtras().get("data");
 
                                             //imgCapture.setImageBitmap(bp);
