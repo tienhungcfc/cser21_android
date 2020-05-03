@@ -250,7 +250,7 @@ public class App21 {
         }.run();
     }
 
-    void CAMERA(final Result result) {
+    void _CAMERA(final Result result) {
         final String CAMERA = Manifest.permission.CAMERA;
         PackageManager packageManager = mContext.getPackageManager();
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
@@ -324,6 +324,79 @@ public class App21 {
         }
     }
 
+    void CAMERA(final Result result) {
+        final String CAMERA = Manifest.permission.CAMERA;
+        PackageManager packageManager = mContext.getPackageManager();
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            // this device has a camera
+            _PERMISSION(result.copy(), CAMERA, new Runnable() {
+                @Override
+                public void run() {
+
+                    Async21.run(0, new Runnable() {
+                        @Override
+                        public void run() {
+                            final MainActivity m = (MainActivity) mContext;
+
+                            Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                            if (cInt.resolveActivity(m.getPackageManager()) == null) {
+                                Result rs = result.copy();
+                                rs.success = false;
+                                rs.error = "resolveActivity()==null";
+                                App21Result(rs);
+                                return;
+                            }
+
+
+                            IsMe = true;
+                            m.startActivityForResult(cInt, activityResultIDManager.put(new ActivityResultID() {
+                                @Override
+                                public void run() {
+                                    if (this.resultCode == Activity.RESULT_OK) {
+                                        Result rs = result.copy();
+                                        try {
+                                            Bitmap bp = (Bitmap) this.intent.getExtras().get("data");
+
+                                            //imgCapture.setImageBitmap(bp);
+
+
+                                            Map<String, String> map = mapParams(rs.params);
+                                            String ext = map.containsKey("ext") ? map.get("ext") : "png";
+                                            String pref = map.containsKey("pref") ? map.get("pref") : "IMG";
+                                            rs.success = true;
+                                            rs.data = "OK";
+
+                                            File f = save(bp, pref + now() + "." + ext);
+                                            rs.data = "file://" + f.getAbsolutePath();
+                                            App21Result(rs);
+                                        } catch (NullPointerException n) {
+                                            rs.success = false;
+                                            rs.error = n.getLocalizedMessage();
+                                        }
+                                    } else if (resultCode == Activity.RESULT_CANCELED) {
+                                        Result rs = result.copy();
+                                        rs.success = false;
+                                        rs.error = "resultCode=" + resultCode;
+                                        App21Result(rs);
+                                    }
+                                }
+                            }), cInt.getExtras());
+                        }
+                    });
+                }
+            });
+
+
+        } else {
+            // no camera on this device
+            Result rs = result.copy();
+
+            rs.success = false;
+            rs.error = "no camera on this device";
+            App21Result(rs);
+        }
+    }
     void FILE(final Result result) {
         Result rs = result.copy();
         rs.success = true;
