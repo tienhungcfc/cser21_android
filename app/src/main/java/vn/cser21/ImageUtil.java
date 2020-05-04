@@ -71,6 +71,19 @@ public class ImageUtil extends AsyncTask<Result, Result, Result> {
 
         return rs;
     }
+
+    public static Bitmap scaleDown(Bitmap realImage, float maxWidth, float maxHeight,
+                                   boolean filter) {
+        float ratio = Math.min(
+                (float) maxWidth / realImage.getWidth(),
+                (float) maxHeight / realImage.getHeight());
+        int width = Math.round((float) ratio * realImage.getWidth());
+        int height = Math.round((float) ratio * realImage.getHeight());
+
+        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
+                height, filter);
+        return newBitmap;
+    }
 }
 
 class ImageUtilInfo {
