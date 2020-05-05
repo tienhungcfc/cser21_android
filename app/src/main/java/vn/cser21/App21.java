@@ -11,11 +11,14 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
@@ -27,7 +30,11 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -159,6 +166,18 @@ public class App21 {
         return mypath;
     }
 
+    File newFile(String filename) {
+        ContextWrapper cw = new ContextWrapper(mContext.getApplicationContext());
+        File directory = cw.getDir("profile", Context.MODE_PRIVATE);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        File mypath = new File(directory, filename);
+
+
+        return mypath;
+    }
+
     String bitmapToBase64(Bitmap bitmap) {
 
 
@@ -250,7 +269,7 @@ public class App21 {
         }.run();
     }
 
-    void CAMERA(final Result result) {
+    void _CAMERA(final Result result) {
         final String CAMERA = Manifest.permission.CAMERA;
         PackageManager packageManager = mContext.getPackageManager();
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
@@ -310,6 +329,158 @@ public class App21 {
                                     }
                                 }
                             }), cInt.getExtras());
+                        }
+                    });
+                }
+            });
+
+
+        } else {
+            // no camera on this device
+            Result rs = result.copy();
+
+            rs.success = false;
+            rs.error = "no camera on this device";
+            App21Result(rs);
+        }
+    }
+
+    private File createImageFile(String suffix) throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                suffix,         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+
+        return image;
+    }
+
+    public static void copy(File src, File dst) throws IOException {
+        InputStream in = new FileInputStream(src);
+        try {
+            OutputStream out = new FileOutputStream(dst);
+            try {
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            } finally {
+                out.close();
+            }
+        } finally {
+            in.close();
+        }
+    }
+
+    Bitmap fromFile(File file) {
+
+        String filePath = file.getPath();
+        return BitmapFactory.decodeFile(filePath);
+    }
+
+    void CAMERA(final Result result) {
+        final String CAMERA = Manifest.permission.CAMERA;
+        PackageManager packageManager = mContext.getPackageManager();
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            // this device has a camera
+            _PERMISSION(result.copy(), CAMERA, new Runnable() {
+                @Override
+                public void run() {
+
+                    Async21.run(0, new Runnable() {
+                        @Override
+                        public void run() {
+                            final MainActivity m = (MainActivity) mContext;
+
+                            Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                            if (cInt.resolveActivity(m.getPackageManager()) == null) {
+                                Result rs = result.copy();
+                                rs.success = false;
+                                rs.error = "resolveActivity()==null";
+                                App21Result(rs);
+                                return;
+                            }
+                            final CameraInfo cameraInfo = new Gson().fromJson(result.params, CameraInfo.class);
+
+                            //final File photoFile = newFile(pref + now() + "." + ext);
+
+                            File _photoFile = null;
+                            try {
+                                _photoFile = createImageFile("." + cameraInfo.ext);
+                            } catch (IOException ex) {
+                                // Error occurred while creating the File
+
+                            }
+                            final File photoFile = _photoFile;
+                            if (photoFile != null) {
+                                try {
+
+                                    Uri photoURI = FileProvider.getUriForFile(mContext,
+                                            BuildConfig.APPLICATION_ID + ".provider",
+                                            photoFile);
+                                    //mPhotoFile = photoFile;
+                                    cInt.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                            IsMe = true;
+                            m.startActivityForResult(cInt, activityResultIDManager.put(new ActivityResultID() {
+                                @Override
+                                public void run() {
+                                    if (this.resultCode == Activity.RESULT_OK) {
+                                        Result rs = result.copy();
+                                        try {
+                                            // Bitmap bp = (Bitmap) this.intent.getExtras().get("data");
+
+                                            //imgCapture.setImageBitmap(bp);
+
+
+                                            // File f = newFile(pref + now() + "." + ext);
+                                            try {
+                                                //copy(photoFile, f);
+
+                                                int maxW = cameraInfo.maxwidth == 0 ? 1000 : cameraInfo.maxwidth;
+                                                int maxh = cameraInfo.maxheight == 0 ? 1000 : cameraInfo.maxheight;
+
+                                                //f.createNewFile();
+                                                Bitmap source = fromFile(photoFile);
+                                                Bitmap target = ImageUtil.scaleDown(source, maxW, maxh, false);
+                                                File f = save(target, cameraInfo.pref + now() + "." + cameraInfo.ext);
+                                                rs.success = true;
+                                                rs.data = "file://" + f.getAbsolutePath();
+                                                photoFile.deleteOnExit();
+
+                                            } catch (Exception e) {
+                                                rs.error = e.getLocalizedMessage();
+                                                rs.success = false;
+                                            }
+                                            // File f = save(bp, pref + now() + "." + ext);
+
+                                            App21Result(rs);
+                                        } catch (NullPointerException n) {
+                                            rs.success = false;
+                                            rs.error = n.getLocalizedMessage();
+                                        }
+                                    } else if (resultCode == Activity.RESULT_CANCELED) {
+                                        Result rs = result.copy();
+                                        rs.success = false;
+                                        rs.error = "resultCode=" + resultCode;
+                                        App21Result(rs);
+                                    }
+                                }
+                            }));
                         }
                     });
                 }
@@ -673,9 +844,6 @@ public class App21 {
                             final MainActivity m = (MainActivity) mContext;
 
 
-
-
-
                             Intent cInt = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
                             cInt.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
@@ -748,11 +916,12 @@ public class App21 {
         }
         App21Result(result);
     }
-    void GET_INFO(final Result result){
+
+    void GET_INFO(final Result result) {
         final App21 t = this;
         result.success = true;
         String info = "Android";
-        info += ",PACKAGE_NAME:"+mContext.getPackageName();
+        info += ",PACKAGE_NAME:" + mContext.getPackageName();
         info += ",SDK_INT:" + Build.VERSION.SDK_INT;
         info += ",CODENAME:" + Build.VERSION.CODENAME;
         info += ",MANUFACTURER:" + Build.MANUFACTURER;
@@ -882,4 +1051,11 @@ class Base64Require {
 class VibratorInfo {
     public int amplitude;
     public int milliseconds;
+}
+
+class CameraInfo {
+    public int maxwidth;
+    public int maxheight;
+    public String pref;
+    public String ext;
 }
