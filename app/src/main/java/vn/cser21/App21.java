@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -931,6 +932,45 @@ public class App21 {
         App21Result(result);
     }
 
+    void TEL(final Result result){
+        final App21 t = this;
+        final String CALL_PHONE = Manifest.permission.CALL_PHONE;
+        _PERMISSION(result, CALL_PHONE, new Runnable() {
+            @Override
+            public void run() {
+                result.success = true;
+
+                Intent phoneIntent = new Intent(Intent.ACTION_CALL);
+                phoneIntent.setData(Uri.parse("tel:" + result.params));
+
+
+                try {
+                    mContext.startActivity(phoneIntent);
+                } catch (Exception e) {
+                    result.success = false;
+                    result.error = e.getLocalizedMessage();
+                    // Instruct the user to install a PDF reader here, or something
+                }
+
+                App21Result(result);
+            }
+        });
+
+
+    }
+    void SHARE_OPEN(final Result result){
+        final App21 t = this;
+        result.success = true;
+        Intent target = new Intent(Intent.ACTION_VIEW);
+        Uri uri = Uri.parse(result.params);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        try {
+           mContext.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            // Instruct the user to install a PDF reader here, or something
+        }
+        App21Result(result);
+    }
     public boolean onActivityResult(int requestCode, int resultCode, Intent intent, Activity activity) {
         // Activity act = activity.getCallingActivity().;
 
