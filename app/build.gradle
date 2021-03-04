@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
-        applicationId "vn.cser21"
+        applicationId "vn.cservn"
         minSdkVersion 15
-        targetSdkVersion 28
-        versionCode 7
-        versionName "7"
+        targetSdkVersion 29
+        versionCode 5
+        versionName "5.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

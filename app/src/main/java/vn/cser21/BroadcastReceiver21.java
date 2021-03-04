@@ -1,4 +1,4 @@
-package vn.cser21;
+package vn.cservn;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

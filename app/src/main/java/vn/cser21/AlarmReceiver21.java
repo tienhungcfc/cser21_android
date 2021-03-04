@@ -1,4 +1,4 @@
-package vn.cser21;
+package vn.cservn;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

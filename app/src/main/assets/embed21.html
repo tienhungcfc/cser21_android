@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes" />
     <title></title>
     <meta http-equiv="Content-Language" content="vi" />
-    <link rel="stylesheet"
-          href="file:///android_asset/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="file:///android_asset/fonts/font-awesome-4.7.0/css/font-awesome.min.css"/>
 
     <style type="text/css">
         *, ::after, ::before {
@@ -151,7 +150,6 @@
     </script>
 </head>
 <body>
-
 <div class="splash">
     <div class="splash-inner">
         <div class="splash-icon"></div>
@@ -246,7 +244,7 @@
             })
 
         }
-
+        CLEAR_LOADER();
         /*
          Step1: SCRIPT_START
          */
@@ -263,7 +261,7 @@
          */
         box(() => {
 
-            var link = 'https://cser.vn/app/index21.aspx';
+            var link = 'https://cser.vn/app2021/index.aspx';
             var N = 5;
             var isShowLoader = false;
             var showLoaderInv = setTimeout(function () {
@@ -334,7 +332,6 @@
                     });
             }
             get();
-
             //Webview visiable
             app_request("call", JSON.stringify({ sub_cmd: 'WV_VISIBLE', sub_cmd_id: -999, params: '1' }));
 

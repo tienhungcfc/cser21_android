@@ -1,4 +1,4 @@
-package vn.cser21;
+package vn.cservn;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -335,12 +335,10 @@ public class MainActivity extends AppCompatActivity {
         Gson gson = new Gson();
 
         String jsonExtras = extras == null ? "{}" : gson.toJson(mapBundle(extras));
-        html = "<script> var ANDROID_EXTRAS =" + jsonExtras + " </script>" + html;
+        html = html.replace("<body>", "<body><script> var ANDROID_EXTRAS =" + jsonExtras + " </script>");
 
         Log.d("jsonExtras", jsonExtras);
         wv.loadDataWithBaseURL(domain, html + "", "text/html", "utf-8", "");
-
-
     }
 
 

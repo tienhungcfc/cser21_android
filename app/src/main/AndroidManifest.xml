@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="vn.cser21">
+    package="vn.cservn">
 
     <!-- permission -->
     <application
-        android:name="vn.cser21.APP"
+        android:name="vn.cservn.APP"
         android:allowBackup="true"
         android:background="@android:color/black"
         android:debuggable="false"
@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="HardcodedDebugMode">
         <activity
-            android:name="vn.cser21.MainActivity"
+            android:name="vn.cservn.MainActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,24 +32,24 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="channel_id" /> <!-- @drawable/ic_stat_name: Ảnh PNG với nèn trong suốt -->
-        <service android:name="vn.cser21.MyFirebaseMessagingService">
+        <service android:name="vn.cservn.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="vn.cser21.FirebaseIDService">
+        <service android:name="vn.cservn.FirebaseIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <receiver android:name="vn.cser21.BroadcastReceiver21"
+        <receiver android:name="vn.cservn.BroadcastReceiver21"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
 
             </intent-filter>
         </receiver>
-        <receiver android:process=":remote" android:name="vn.cser21.AlarmReceiver21"></receiver>
+        <receiver android:process=":remote" android:name="vn.cservn.AlarmReceiver21"></receiver>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -69,9 +69,9 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+<!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+<!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
+<!--    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />-->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
